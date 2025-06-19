@@ -4,11 +4,11 @@ const movieSchema = new Schema({
     title: {
         type: String,
         required: true,
-        unique: false
+        unique: true
     },
     year: {
         type: String,
-        required: true,
+        // required: true,
         unique: false
     },
     description: {
@@ -58,7 +58,7 @@ const movieSchema = new Schema({
     },
     is_watched: {
         type: Boolean,
-        required: true,
+        // required: true,
     }
 });
 

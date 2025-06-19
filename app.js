@@ -8,11 +8,11 @@ const indexRoutes = require('./routes/index.routes');
 const app = express();
 
 app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }))
 
 app.set('view engine', 'ejs');
 
 app.use('/', indexRoutes);
-
 
 async function connectDB() {
     await mongoose.connect(process.env.MONGODB_URI);
