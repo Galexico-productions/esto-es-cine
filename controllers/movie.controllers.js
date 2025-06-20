@@ -1,4 +1,5 @@
 const Movie = require('../models/movies.model')
+const { getAllMovieTitles } = require('../services/movies.services')
 
 
 const postNewMovie = async (req, res) => {
@@ -9,16 +10,13 @@ const postNewMovie = async (req, res) => {
                 error: "Title is required"
             });
         }
-        const moviesTitles = await Movie.find({}, "title").lean();
-
-        const titlesArray = moviesTitles.map(movie => movie.title.toLowerCase());
-        if (titlesArray.includes(title.toLowerCase())) {
+        
+        const allMovieTitles = await getAllMovieTitles();
+        if (allMovieTitles.includes(title.toLowerCase())) {
             return res.status(400).json({
-                error: "Esa peli ya existe"
+                error: "Esa peli ya existe" 
             })
         }
-
-
 
         await Movie.create({
             title: req.body.title
