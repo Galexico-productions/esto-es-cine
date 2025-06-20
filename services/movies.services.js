@@ -1,11 +1,8 @@
 const Movie = require('../models/movies.model')
 
 const getAllMovieTitles = async () => {
-    const moviesTitles = await Movie.find({}, "title").lean();
-
-    const titlesArray = moviesTitles.map(movie => movie.title.toLowerCase());
-
-    return titlesArray
+    const movies = await Movie.find({}, "title").lean();
+    return movies.map((m) => m.title);
 }
 
 module.exports = {

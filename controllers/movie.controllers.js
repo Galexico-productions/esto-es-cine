@@ -12,7 +12,8 @@ const postNewMovie = async (req, res) => {
         }
         
         const allMovieTitles = await getAllMovieTitles();
-        if (allMovieTitles.some((movie) => movie.title.toLowerCase() === title.toLowerCase())) {
+        console.log("🧪 allMovieTitles from DB:", allMovieTitles);
+        if (allMovieTitles.some((t) => t.toLowerCase() === title.toLowerCase())) {
             return res.status(400).json({
                 error: "Esa peli ya existe" 
             })

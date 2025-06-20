@@ -22,7 +22,7 @@ describe("Movie controller", () => {
 
   it("should give a 400 error if movie already exists", async () => {
     //Given
-    const existingTitles = [{ title: "El Padrino" }, { title: "green book" }];
+    const existingTitles = [ "El Padrino", "green book"];
     getAllMovieTitles.mockResolvedValue(existingTitles);
     const req = { body: { title: "El Padrino" } };
     const res = {
@@ -39,11 +39,11 @@ describe("Movie controller", () => {
 
   it("should give a 201 if movie is correctly saved", async () => {
     //Given
-    const existingTitles = [{ title: "El Padrino" }, { title: "green book" }];
+    const existingTitles = [ "El Padrino", "green book" ];
     getAllMovieTitles.mockResolvedValue(existingTitles);
 
     Movie.create = jest.fn().mockResolvedValue({ title: "Star Wars" });
-    
+
     const req = { body: { title: "Star Wars" } }
     const res = {
       status: jest.fn().mockReturnThis(),
