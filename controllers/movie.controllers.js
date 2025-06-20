@@ -22,7 +22,7 @@ const postNewMovie = async (req, res) => {
             title: req.body.title
         });
 
-        return res.status(201).send('Peli añadida exitosamente');
+        return res.status(201).json({ message : 'Peli añadida exitosamente'});
     } catch (error) {
         console.error("Error creating movie:", error.message);
         return res.status(500).json({

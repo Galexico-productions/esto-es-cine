@@ -22,9 +22,9 @@ describe("Movie controller", () => {
 
   it("should give a 400 error if movie already exists", async () => {
     //Given
-    const existingTitles = [{ title : "el padrino" }, { title : "green book" }];
+    const existingTitles = [{ title: "El Padrino" }, { title: "green book" }];
     getAllMovieTitles.mockResolvedValue(existingTitles);
-    const req = { body: { title: "el padrino" } };
+    const req = { body: { title: "El Padrino" } };
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
@@ -37,20 +37,25 @@ describe("Movie controller", () => {
     expect(res.json).toHaveBeenCalledWith({ error: "Esa peli ya existe" })
   })
 
-  // 
-  //   it("should give a 400 error if movie already exists", () => {
-  //     //Given
+  it("should give a 201 if movie is correctly saved", async () => {
+    //Given
+    const existingTitles = [{ title: "El Padrino" }, { title: "green book" }];
+    getAllMovieTitles.mockResolvedValue(existingTitles);
 
-  //     //When
-  //     const response = postNewMovie(req, res);
+    Movie.create = jest.fn().mockResolvedValue({ title: "Star Wars" });
+    
+    const req = { body: { title: "Star Wars" } }
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
 
-  //     //Then
-  //     expect(response.status).toEqual(400);
-
-  //   });
-
-
-
-
-  //   it("should give a 200 if movie is correctly saved", () => { });
+    //When
+    await postNewMovie(req, res)
+    //Then
+    expect(getAllMovieTitles).toHaveBeenCalledWith();
+    expect(Movie.create).toHaveBeenCalledWith({ title: "Star Wars" });
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Peli añadida exitosamente' })
+  });
 });
