@@ -1,5 +1,5 @@
-const { postNewMovie, getAllMovies } = require('/controllers/movie.controllers')
-const { getAllMovieTitles } = require('/services/movies.services')
+const { postNewMovie, getMovies } = require('/controllers/movie.controllers')
+const { getAllMovies, getAllMovieTitles } = require('/services/movies.services')
 jest.mock('/services/movies.services.js')
 const Movie = require('/models/movies.model')
 jest.mock('/models/movies.model.js')
@@ -60,17 +60,31 @@ describe("postNewMovie when called", () => {
   });
 });
 
-describe("getAllMovies function", () => {
-  it("should be able to see all the movie titles ordered alphabetically", async () => {
+describe("getMovies controller", () => {
+  it("should be able to render all the movies", async () => {
     //Given
+    const movies = [
+      { title: 'Ants', year: '2000' },
+      { title: 'Monsters INC', year: '2005' },
+      { title: 'XYZ', year: '1992' }
+    ];
+    getAllMovies.mockResolvedValue(movies);
+
+    const req = {}
+    const res = {
+      render: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
     //When
-    const result = await getAllMovies(req, res)
+    await getMovies(req, res)
     //Then
-    expect(getAllMovies).toHaveBeenCalledWith();
+    expect(res.render).toHaveBeenCalledWith('my-movies', { movies })
   })
-  it("should get a message saying the list is empty", async () => {
-    //Given
-    //When
-    //Then
-  })
+  // it("should get a message saying the list is empty", async () => {
+  //   //Given
+  //   //When
+  //   //Then
+  // })
 })

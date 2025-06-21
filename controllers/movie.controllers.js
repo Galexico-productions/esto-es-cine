@@ -12,7 +12,6 @@ const postNewMovie = async (req, res) => {
         }
 
         const allMovieTitles = await getAllMovieTitles();
-        console.log("allMovieTitles from DB:", allMovieTitles);
         if (allMovieTitles.some((t) => t.toLowerCase() === title.toLowerCase())) {
             return res.status(400).json({
                 error: "Esa peli ya existe"
@@ -40,7 +39,7 @@ const getMovies = async (req, res) => {
         })
     } catch (error) {
         console.error("Error getting the list of movies: ", error.message);
-        return res.statur(500).json({
+        return res.status(500).json({
             error: "Internal server error"
         })
     }

@@ -2,7 +2,8 @@ const Movie = require('../models/movies.model')
 
 
 const getAllMovies = async () => {
-    const movies = await Movie.find();
+    const movies = await Movie.find({}, 'title').collation({ locale: 'en', strength: 1 }).sort({ title: 1 })
+
     return movies
 }
 
