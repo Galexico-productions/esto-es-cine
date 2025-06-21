@@ -1,0 +1,20 @@
+<head>
+    <title>🍿 Movies</title>
+    <%- include('./partials/head.ejs') %>
+</head>
+
+<body>
+    <section>
+        <h1>Movies!</h1>
+        <div>
+            <ol>
+                <% for (const m of movies) { %>
+                    <li><%= m.title %></li>
+                        <% } %>
+            </ol>
+        </div>
+    </section>
+
+</body>
+
+</html>
