@@ -4,7 +4,7 @@ jest.mock('/services/movies.services.js')
 const Movie = require('/models/movies.model')
 jest.mock('/models/movies.model.js')
 
-describe("Movie controller", () => {
+describe("postNewMovie when called", () => {
 
   it("should give a 400 error if there is no title", async () => {
     //Given
