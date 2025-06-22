@@ -1,20 +1,25 @@
-const { postNewMovie, getMovies } = require('/controllers/movie.controllers')
-const { getAllMovies, getAllMovieTitles } = require('/services/movies.services')
-jest.mock('/services/movies.services.js')
-const Movie = require('/models/movies.model')
-jest.mock('/models/movies.model.js')
+import { Request, Response } from 'express'
+import { postNewMovie, getMovies, deleteMovie } from "../../controllers/movie.controllers"
+import { getAllMovies, getAllMovieTitles } from "../../services/movies.services"
+import * as services from '../../services/movies.services'
+import Movie from '../../models/movies.model'
+
+jest.mock('../../services/movies.services.ts')
+jest.mock('../../models/movies.model.js')
+
+
 
 describe("postNewMovie when called", () => {
 
   it("should give a 400 error if there is no title", async () => {
     //Given
-    const req = { body: { title: '' } }
+    const req = { body: { title: '' } } as Partial<Request>;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
-    };
+    } as Partial<Response>;
     //When
-    await postNewMovie(req, res)
+    await postNewMovie(req as Request, res as Response)
     //Then
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: "Title is required" })
@@ -23,14 +28,14 @@ describe("postNewMovie when called", () => {
   it("should give a 400 error if movie already exists", async () => {
     //Given
     const existingTitles = ["El Padrino", "green book"];
-    getAllMovieTitles.mockResolvedValue(existingTitles);
-    const req = { body: { title: "El Padrino" } };
+    (getAllMovieTitles as jest.Mock).mockResolvedValue(existingTitles);
+    const req = { body: { title: "El Padrino" } } as Partial<Request>;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
-    };
+    } as Partial<Response>;
     //When
-    await postNewMovie(req, res)
+    await postNewMovie(req as Request, res as Response)
     //Then
     expect(getAllMovieTitles).toHaveBeenCalledWith()
     expect(res.status).toHaveBeenCalledWith(400);
@@ -40,18 +45,18 @@ describe("postNewMovie when called", () => {
   it("should give a 201 if movie is correctly saved", async () => {
     //Given
     const existingTitles = ["El Padrino", "green book"];
-    getAllMovieTitles.mockResolvedValue(existingTitles);
+    (getAllMovieTitles as jest.Mock).mockResolvedValue(existingTitles);
 
     Movie.create = jest.fn().mockResolvedValue({ title: "Star Wars" });
 
-    const req = { body: { title: "Star Wars" } }
+    const req = { body: { title: "Star Wars" } } as Partial<Request>;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
-    };
+    } as Partial<Response>;
 
     //When
-    await postNewMovie(req, res)
+    await postNewMovie(req as Request, res as Response)
     //Then
     expect(getAllMovieTitles).toHaveBeenCalledWith();
     expect(Movie.create).toHaveBeenCalledWith({ title: "Star Wars" });
@@ -68,46 +73,51 @@ describe("getMovies controller", () => {
       { title: 'Monsters INC', year: '2005' },
       { title: 'XYZ', year: '1992' }
     ];
-    getAllMovies.mockResolvedValue(movies);
+    (getAllMovies as jest.Mock).mockResolvedValue(movies);
 
-    const req = {}
+    const req = {} as Partial<Request>;
     const res = {
       render: jest.fn(),
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
-    };
+    } as Partial<Response>;
 
     //When
-    await getMovies(req, res)
+    await getMovies(req as Request, res as Response)
     //Then
     expect(res.render).toHaveBeenCalledWith('my-movies', { movies })
   })
   it("should get a message saying the list is empty", async () => {
     //Given
-    const movies = [];
-    getAllMovies.mockResolvedValue(movies)
+    const movies: string[] = [];
+    (getAllMovies as jest.Mock).mockResolvedValue(movies)
 
-    const req = {}
+    const req = {} as Partial<Request>;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
-    };
+    } as Partial<Response>;
 
     //When
-    await getMovies(req, res)
+    await getMovies(req as Request, res as Response)
     //Then
     expect(res.status).toHaveBeenCalledWith(204);
     expect(res.json).toHaveBeenCalledWith({ message: 'The list is empty' })
   })
 })
+describe("deleteMovie controller", () => {
+  it("should return 204 and confirmation message when movie is deleted", async () => {
+    //Given
+    const req = {} as Partial<Request>;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    } as Partial<Response>;
+    //When
+    await deleteMovie(req as Request, res as Response)
+    //Then
+    expect(res.status).toHaveBeenCalledWith(204);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Peli borrada exitosamente' })
+  })
+})
 
-// AC1: Display Delete button
-// Given there are movies in the system
-// When the user is viewing the list of movies
-// Then there should be a delete button next to each of them
-
-// AC2: Delete an existing movie
-// Given the user is viewing the list of movies
-// When they click on the Delete button for a movie with title X
-// Then the list of movies should be updated to not include movie X
-// And a message should be shown saying that movie X was deleted

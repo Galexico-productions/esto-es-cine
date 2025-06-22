@@ -1,6 +1,7 @@
-const { Schema, model } = require('mongoose');
+import { Schema, model } from 'mongoose'
+import { MovieType } from '../types/movies.interface';
 
-const movieSchema = new Schema({
+const movieSchema = new Schema<MovieType>({
     title: {
         type: String,
         required: true,
@@ -16,7 +17,7 @@ const movieSchema = new Schema({
         required: false,
         unique: false,
     },
-    imdb_Rating: {
+    imdb_rating: {
         type: String,
         required: false,
         unique: false
@@ -64,4 +65,4 @@ const movieSchema = new Schema({
 
 const Movie = model('Movie', movieSchema);
 
-module.exports = Movie;
+export default Movie;
