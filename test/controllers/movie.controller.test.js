@@ -82,9 +82,32 @@ describe("getMovies controller", () => {
     //Then
     expect(res.render).toHaveBeenCalledWith('my-movies', { movies })
   })
-  // it("should get a message saying the list is empty", async () => {
-  //   //Given
-  //   //When
-  //   //Then
-  // })
+  it("should get a message saying the list is empty", async () => {
+    //Given
+    const movies = [];
+    getAllMovies.mockResolvedValue(movies)
+
+    const req = {}
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    //When
+    await getMovies(req, res)
+    //Then
+    expect(res.status).toHaveBeenCalledWith(204);
+    expect(res.json).toHaveBeenCalledWith({ message: 'The list is empty' })
+  })
 })
+
+// AC1: Display Delete button
+// Given there are movies in the system
+// When the user is viewing the list of movies
+// Then there should be a delete button next to each of them
+
+// AC2: Delete an existing movie
+// Given the user is viewing the list of movies
+// When they click on the Delete button for a movie with title X
+// Then the list of movies should be updated to not include movie X
+// And a message should be shown saying that movie X was deleted

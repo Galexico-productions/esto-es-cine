@@ -34,9 +34,18 @@ const postNewMovie = async (req, res) => {
 const getMovies = async (req, res) => {
     try {
         const movies = await getAllMovies()
-        res.render('my-movies', { 
-            movies
-        })
+
+        if (movies.length === 0) {
+            return res.status(204).json({
+                message: 'The list is empty'
+            })
+        } else {
+            res.render('my-movies', {
+                movies
+            })
+        }
+
+
     } catch (error) {
         console.error("Error getting the list of movies: ", error.message);
         return res.status(500).json({
