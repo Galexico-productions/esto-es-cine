@@ -4,13 +4,12 @@ import { getAllMovies, getAllMovieTitles } from "../../services/movies.services"
 import * as services from '../../services/movies.services'
 import Movie from '../../models/movies.model'
 
-jest.mock('../../services/movies.services.ts')
-jest.mock('../../models/movies.model.js')
+jest.mock('../../services/movies.services')
+jest.mock('../../models/movies.model')
 
 
 
 describe("postNewMovie when called", () => {
-
   it("should give a 400 error if there is no title", async () => {
     //Given
     const req = { body: { title: '' } } as Partial<Request>;

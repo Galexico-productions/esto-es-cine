@@ -1,6 +1,6 @@
-const { getAllMovies } = require('/services/movies.services')
-const Movie = require('/models/movies.model')
-jest.mock('/models/movies.model.js')
+import { getAllMovies } from "../../services/movies.services"
+import Movie from '../../models/movies.model'
+jest.mock('../../models/movies.model')
 
 describe("getAllMovies function", () => {
      it("should call the database and return movies sorted alphabetically", async () => {
@@ -12,7 +12,11 @@ describe("getAllMovies function", () => {
     ];
     const sortMock = jest.fn().mockResolvedValue(mockSortedMovies);
     const collationMock = jest.fn().mockReturnValue({ sort: sortMock });
-    Movie.find.mockReturnValue({ collation: collationMock });
+    
+    jest.spyOn(Movie, 'find').mockReturnValue({
+      collation: collationMock,
+    } as any);
+
     // When
     const result = await getAllMovies();
     // Then
