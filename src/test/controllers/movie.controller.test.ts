@@ -107,14 +107,18 @@ describe("getMovies controller", () => {
 describe("deleteMovie controller", () => {
   it("should return 204 and confirmation message when movie is deleted", async () => {
     //Given
-    const req = {} as Partial<Request>;
+    const req = {
+      params: { id: "this is a mock id"}
+    } as Partial<Request>;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
     } as Partial<Response>;
+    (Movie.findByIdAndDelete as jest.Mock).mockResolvedValue({ title: "any movie "})
     //When
     await deleteMovie(req as Request, res as Response)
     //Then
+    expect(Movie.findByIdAndDelete).toHaveBeenCalledWith("this is a mock id")
     expect(res.status).toHaveBeenCalledWith(204);
     expect(res.json).toHaveBeenCalledWith({ message: 'Peli borrada exitosamente' })
   })

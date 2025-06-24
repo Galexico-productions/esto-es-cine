@@ -74,7 +74,18 @@ export const getMovies = async (req: Request, res: Response): Promise<void> => {
 
 export const deleteMovie = async (req: Request, res: Response): Promise<void> => {
     try {
-
+        const { id } = req.params
+        const deletedMovie = await Movie.findByIdAndDelete(id)
+        if (!deletedMovie) {
+            res.status(404).json({
+                error: 'Movie not found'
+            });
+            return;
+        }
+        res.status(204).json({
+            message: 'Peli borrada exitosamente'
+        });
+        // res.redirect('/my-movies');
     } catch (error: unknown) {
         if (error instanceof Error) {
             console.error("Error deleting the movie:", error.message);

@@ -9,7 +9,12 @@
         <div>
             <ol>
                 <% for (const m of movies) { %>
-                    <li><%= m.title %></li>
+                    <li>
+                        <%= m.title %>
+                            <form action="/my-movies/<%= m._id %>" method="POST">
+                                <button type="submit">Borrar Peli</button>
+                            </form>
+                    </li>
                         <% } %>
             </ol>
         </div>

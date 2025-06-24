@@ -15,7 +15,7 @@ li {
   box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
   box-sizing: border-box;
   color: #41403e;
-  cursor: pointer;
+  /* cursor: pointer; */
   /* display: inline-block; */
   width: fit-content;
   font-family: Neucha, sans-serif;
@@ -29,7 +29,7 @@ li {
   border-bottom-right-radius: 225px 15px;
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
+  /* user-select: none;
+  -webkit-user-select: none; */
+  /* touch-action: manipulation; */
 }
