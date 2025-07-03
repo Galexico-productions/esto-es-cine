@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 dotenv.config();
 import indexRoutes from './routes/index.routes';
+import moviesRoutes from './routes/movies.routes';
 import path from 'path';
 import methodOverride from 'method-override'
 
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
 app.use('/', indexRoutes);
+app.use('/movie', moviesRoutes);
 
 async function connectDB() {
     try {

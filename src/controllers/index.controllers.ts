@@ -5,3 +5,7 @@ export const getHome = async (req: Request, res: Response): Promise<void> => {
     })
 }
 
+export const getSearchMovies = async (req: Request, res: Response): Promise<void> => {
+    res.render('search', {
+    })
+}
