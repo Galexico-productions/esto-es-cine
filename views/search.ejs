@@ -1,0 +1,13 @@
+<head>
+    <title>🍿 Movies</title>
+    <%- include('./partials/head.ejs') %>
+</head>
+
+
+<body>
+    <form action="/movie/search" method="GET">
+        <label for="title">Search for a movie</label>
+        <input type="text" name="title" id="title" placeholder="movie title">
+        <input type="submit" value="Search">
+    </form>
+</body>
