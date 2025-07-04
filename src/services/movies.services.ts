@@ -23,8 +23,5 @@ export const fetchMovieFromTMDB = async (title: string): Promise<TMDBMovie[]> =>
     const data = await res.json();
 
     //Asumir que sólo es una y hacer PR cuando funcione
-    return data.results.map((movie: any) => ({
-        id: movie.id,
-        title: movie.title,
-    }));
+    return data.results;
 };

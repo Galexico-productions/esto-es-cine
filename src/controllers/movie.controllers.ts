@@ -85,9 +85,6 @@ export const getMovieInfo = async (req: Request, res: Response): Promise<void> =
             })
             return
         } else {
-            res.render('my-movies', {
-
-            })
         }
 
     } catch (error: unknown) {
@@ -98,10 +95,8 @@ export const getMovieInfo = async (req: Request, res: Response): Promise<void> =
         }
         res.status(500).json({
             error: "Internal Server Error"
-        })
-            ;
+        });
         return
-
     }
 }
 

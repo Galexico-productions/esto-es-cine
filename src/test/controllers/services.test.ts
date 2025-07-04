@@ -2,7 +2,7 @@ import { getAllMovies } from "../../services/movies.services"
 import Movie from '../../models/movies.model'
 jest.mock('../../models/movies.model')
 import { fetchMovieFromTMDB } from '../../services/movies.services'
-global.fetch = jest.fn()
+(global.fetch as jest.Mock) = jest.fn();
 import { TMDBMovie } from "../../types/TMDB.interface"
 
 describe("getAllMovies function", () => {
@@ -30,39 +30,36 @@ describe("getAllMovies function", () => {
   });
 });
 
-// describe("fetchMovieFromTMDB", () => {
-//   it("should call the TMDB API and return an array of movies with id and title", async () => {
-//     const mockMovies = [
-//       { id: 1, title: 'title1' }, { id: 2, title: 'title2' }
-//     ]
-//     const mockResponse = {
-//       ok: true,
-//       json: async () => ({ results: mockMovies })
-//     };
-
-//     (fetch as jest.Mock).mockResolvedValue({
-//       ok: true,
-//       json: async () => ({
-//         results: mockMovies
-//       })
-//     });
-
-//     const result: TMDBMovie[] = await fetchMovieFromTMDB();
-
-//     expect(fetch).toHaveBeenCalledTimes(1);
-//     expect(result).toEqual([
-//       { id: 1, title: 'title1' }, { id: 2, title: 'title2' }
-//     ]);
-//   });
-  
-//   it("should throw an error if fetch fails", async () => {
-//     const mockErrorResponse = {
-//       ok: false,
-//       status: 500
-//     };
+describe("fetchMovieFromTMDB", () => {
+  it("should call the TMDB API and return a single movie with id and title", async () => {
+    //Given
+    const mockTitle = 'title1'
+    const mockMovie = [
+      { id: 1, title: 'title1' }
+    ];
     
-//     (fetch as jest.Mock).mockResolvedValue(mockErrorResponse);
 
-//     await expect(fetchMovieFromTMDB()).rejects.toThrow('TMDB fetch failed: 500')
-//   });
-// });
+    (fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        results: mockMovie
+      })
+    });
+    //When
+    const result: TMDBMovie[] = await fetchMovieFromTMDB(mockTitle);
+    //Then
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(mockMovie);
+  });
+  it("should show an error message when the movie does not exist", async () => {
+    //Given
+    const mockTitle = "this is the fake title";
+
+    (fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 404
+    })
+    //When and then
+    await expect(fetchMovieFromTMDB(mockTitle)).rejects.toThrow("TMDB fetch failed: 404")
+  })
+});
