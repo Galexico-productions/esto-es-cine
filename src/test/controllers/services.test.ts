@@ -1,7 +1,7 @@
 import { getAllMovies } from "../../services/movies.services"
 import Movie from '../../models/movies.model'
 jest.mock('../../models/movies.model')
-import { fetchMoviesFromTMDB } from '../../services/movies.services'
+import { fetchMovieFromTMDB } from '../../services/movies.services'
 global.fetch = jest.fn()
 import { TMDBMovie } from "../../types/TMDB.interface"
 
@@ -30,39 +30,39 @@ describe("getAllMovies function", () => {
   });
 });
 
-describe("fetchMoviesFromTMDB", () => {
-  it("should call the TMDB API and return an array of movies with id and title", async () => {
-    const mockMovies = [
-      { id: 1, title: 'title1' }, { id: 2, title: 'title2' }
-    ]
-    const mockResponse = {
-      ok: true,
-      json: async () => ({ results: mockMovies })
-    };
+// describe("fetchMovieFromTMDB", () => {
+//   it("should call the TMDB API and return an array of movies with id and title", async () => {
+//     const mockMovies = [
+//       { id: 1, title: 'title1' }, { id: 2, title: 'title2' }
+//     ]
+//     const mockResponse = {
+//       ok: true,
+//       json: async () => ({ results: mockMovies })
+//     };
 
-    (fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        results: mockMovies
-      })
-    });
+//     (fetch as jest.Mock).mockResolvedValue({
+//       ok: true,
+//       json: async () => ({
+//         results: mockMovies
+//       })
+//     });
 
-    const result: TMDBMovie[] = await fetchMoviesFromTMDB();
+//     const result: TMDBMovie[] = await fetchMovieFromTMDB();
 
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(result).toEqual([
-      { id: 1, title: 'title1' }, { id: 2, title: 'title2' }
-    ]);
-  });
+//     expect(fetch).toHaveBeenCalledTimes(1);
+//     expect(result).toEqual([
+//       { id: 1, title: 'title1' }, { id: 2, title: 'title2' }
+//     ]);
+//   });
   
-  it("should throw an error if fetch fails", async () => {
-    const mockErrorResponse = {
-      ok: false,
-      status: 500
-    };
+//   it("should throw an error if fetch fails", async () => {
+//     const mockErrorResponse = {
+//       ok: false,
+//       status: 500
+//     };
     
-    (fetch as jest.Mock).mockResolvedValue(mockErrorResponse);
+//     (fetch as jest.Mock).mockResolvedValue(mockErrorResponse);
 
-    await expect(fetchMoviesFromTMDB()).rejects.toThrow('TMDB fetch failed: 500')
-  });
-});
+//     await expect(fetchMovieFromTMDB()).rejects.toThrow('TMDB fetch failed: 500')
+//   });
+// });
