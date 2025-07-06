@@ -1,10 +1,9 @@
 import { Request, Response } from 'express'
 import { postNewMovie, getMovies, deleteMovie } from "../../controllers/movie.controllers"
-import { getAllMovies, getAllMovieTitles } from "../../services/movies.services"
-import * as services from '../../services/movies.services'
+import { getAllMovies, getAllMovieTitles } from "../../services/movie.service"
 import Movie from '../../models/movies.model'
 
-jest.mock('../../services/movies.services')
+jest.mock('../../services/movie.service')
 jest.mock('../../models/movies.model')
 
 

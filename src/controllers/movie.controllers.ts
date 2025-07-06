@@ -1,7 +1,7 @@
 import Movie from '../models/movies.model';
 import { Request, Response } from 'express';
-import { getAllMovies, getAllMovieTitles } from '../services/movies.services';
-import { fetchMovieFromTMDB } from '../services/movies.services';
+import { getAllMovies, getAllMovieTitles } from '../services/movie.service';
+import { fetchMovieFromTMDB } from '../services/movie.service';
 
 
 export const postNewMovie = async (req: Request, res: Response): Promise<void> => {

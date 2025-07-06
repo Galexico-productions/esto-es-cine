@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 dotenv.config();
 import indexRoutes from './routes/index.routes';
-import moviesRoutes from './routes/movies.routes';
+import moviesRoutes from './routes/movie.routes';
 import path from 'path';
 import methodOverride from 'method-override'
 
