@@ -1,32 +1,22 @@
-import { getAllMovies } from "../../services/movie.service"
-import Movie from '../../models/movies.model'
 jest.mock('../../models/movies.model')
-import { fetchMovieFromTMDB } from '../../services/movie.service'
+import * as MovieRepository from '../../repositories/movie.repository';
+import { fetchMovieFromTMDB, getAllMoviesService } from '../../services/movie.service'
 (global.fetch as jest.Mock) = jest.fn();
 import { TMDBMovie } from "../../types/TMDB.interface"
 
-describe("getAllMovies function", () => {
-  it("should call the database and return movies sorted alphabetically", async () => {
+describe("getAllMoviesServices function", () => {
+  it("should get all movies from the movies repository", async () => {
     // Given
-    const mockSortedMovies = [
-      { title: 'Ants', year: '2000' },
-      { title: 'Monsters INC', year: '2005' },
-      { title: 'XYZ', year: '1992' }
-    ];
-    const sortMock = jest.fn().mockResolvedValue(mockSortedMovies);
-    const collationMock = jest.fn().mockReturnValue({ sort: sortMock });
-
-    jest.spyOn(Movie, 'find').mockReturnValue({
-      collation: collationMock,
-    } as any);
-
+    const mockMovies = [
+      { title: "Zootopia", year: "2016" },
+      { title: "Ants", year: "1998" },
+      { title: "Cars", year: "2006" }
+    ] as any;
+    jest.spyOn(MovieRepository, "getAllMoviesFromMongoDB").mockResolvedValue(mockMovies);
     // When
-    const result = await getAllMovies();
+    const result = await getAllMoviesService();
     // Then
-    expect(Movie.find).toHaveBeenCalledWith({}, 'title');
-    expect(collationMock).toHaveBeenCalledWith({ locale: 'en', strength: 1 });
-    expect(sortMock).toHaveBeenCalledWith({ title: 1 });
-    expect(result).toEqual(mockSortedMovies);
+    expect(result).toEqual(mockMovies)
   });
 });
 
@@ -37,7 +27,7 @@ describe("fetchMovieFromTMDB", () => {
     const mockMovie = [
       { id: 1, title: 'title1' }
     ];
-    
+
 
     (fetch as jest.Mock).mockResolvedValue({
       ok: true,

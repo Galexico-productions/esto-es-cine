@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { postNewMovie, getMovies, deleteMovie } from "../../controllers/movie.controllers"
-import { getAllMovies, getAllMovieTitles } from "../../services/movie.service"
+import { getAllMoviesService, getAllMovieTitles } from "../../services/movie.service"
 import Movie from '../../models/movies.model'
 
 jest.mock('../../services/movie.service')
@@ -71,7 +71,7 @@ describe("getMovies controller", () => {
       { title: 'Monsters INC', year: '2005' },
       { title: 'XYZ', year: '1992' }
     ];
-    (getAllMovies as jest.Mock).mockResolvedValue(movies);
+    (getAllMoviesService as jest.Mock).mockResolvedValue(movies);
 
     const req = {} as Partial<Request>;
     const res = {
@@ -88,7 +88,7 @@ describe("getMovies controller", () => {
   it("should get a message saying the list is empty", async () => {
     //Given
     const movies: string[] = [];
-    (getAllMovies as jest.Mock).mockResolvedValue(movies)
+    (getAllMoviesService as jest.Mock).mockResolvedValue(movies)
 
     const req = {} as Partial<Request>;
     const res = {
