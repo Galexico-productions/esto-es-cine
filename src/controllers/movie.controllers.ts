@@ -1,7 +1,7 @@
 import Movie from '../models/movies.model';
 import { Request, Response } from 'express';
-import { getAllMovies, getAllMovieTitles } from '../services/movie.service';
-import { fetchMovieFromTMDB } from '../services/movie.service';
+import { getAllMoviesService, getAllMovieTitles } from '../services/movie.services';
+import { getMovieByTitleFromTMDB } from '../client/TMDBClient';
 
 
 export const postNewMovie = async (req: Request, res: Response): Promise<void> => {
@@ -44,7 +44,7 @@ export const postNewMovie = async (req: Request, res: Response): Promise<void> =
 }
 export const getMovies = async (req: Request, res: Response): Promise<void> => {
     try {
-        const movies = await getAllMovies()
+        const movies = await getAllMoviesService()
 
         if (movies.length === 0) {
             res.status(204).json({
@@ -76,7 +76,7 @@ export const getMovies = async (req: Request, res: Response): Promise<void> => {
 export const getMovieInfo = async (req: Request, res: Response): Promise<void> => {
     try {
         const movieTitle = req.query.title as string
-        const fetchedMovie = await fetchMovieFromTMDB(movieTitle)
+        const fetchedMovie = await getMovieByTitleFromTMDB(movieTitle) //Temporal: Después mover a services junto con test
         console.log("🚀 ~ getMovieInfo ~ fetchedMovie:", fetchedMovie)
 
         if (!fetchedMovie) {
