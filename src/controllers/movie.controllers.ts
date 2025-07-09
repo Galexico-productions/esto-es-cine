@@ -1,7 +1,8 @@
 import Movie from '../models/movies.model';
 import { Request, Response } from 'express';
-import { getAllMoviesService, getAllMovieTitles } from '../services/movie.services';
+import { getAllMoviesService, getAllMovieTitlesService } from '../services/movie.services';
 import { getMovieByTitleFromTMDB } from '../client/TMDBClient';
+import { sortMoviesByTitle } from '../viewModels/movieView';
 
 
 export const postNewMovie = async (req: Request, res: Response): Promise<void> => {
@@ -14,8 +15,8 @@ export const postNewMovie = async (req: Request, res: Response): Promise<void> =
             return
         };
 
-        const allMovieTitles = await getAllMovieTitles();
-        if (allMovieTitles.some((t) => t.toLowerCase() === title.toLowerCase())) {
+        const allMovieTitles = await getAllMovieTitlesService();
+        if (allMovieTitles.some((t:string) => t.toLowerCase() === title.toLowerCase())) {
             res.status(400).json({
                 error: "Esa peli ya existe"
             });
@@ -45,34 +46,27 @@ export const postNewMovie = async (req: Request, res: Response): Promise<void> =
 export const getMovies = async (req: Request, res: Response): Promise<void> => {
     try {
         const movies = await getAllMoviesService()
-
         if (movies.length === 0) {
-            res.status(204).json({
+            res.status(404).json({
                 message: 'The list is empty'
-            })
+            });
             return
-        } else {
-            res.render('my-movies', {
-                movies
-            })
-        }
-
-
+        };
+        res.render('my-movies', {
+            movies: sortMoviesByTitle(movies)
+        });
     } catch (error: unknown) {
         if (error instanceof Error) {
             console.error("Error getting the list of movies:", error.message);
         } else {
             console.error("Unkown error:", error)
-        }
+        };
         res.status(500).json({
             error: "Internal Server Error"
-        })
-            ;
+        });
         return
-
-    }
-}
-
+    };
+};
 export const getMovieInfo = async (req: Request, res: Response): Promise<void> => {
     try {
         const movieTitle = req.query.title as string

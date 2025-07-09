@@ -1,7 +1,8 @@
 import { Request, Response } from 'express'
 import { postNewMovie, getMovies, deleteMovie } from "../../controllers/movie.controllers"
-import { getAllMoviesService, getAllMovieTitles } from "../../services/movie.services"
+import { getAllMoviesService, getAllMovieTitlesService } from "../../services/movie.services"
 import Movie from '../../models/movies.model'
+import { sortMoviesByTitle } from '../../viewModels/movieView'
 
 jest.mock('../../services/movie.services')
 jest.mock('../../models/movies.model')
@@ -26,7 +27,7 @@ describe("postNewMovie when called", () => {
   it("should give a 400 error if movie already exists", async () => {
     //Given
     const existingTitles = ["El Padrino", "green book"];
-    (getAllMovieTitles as jest.Mock).mockResolvedValue(existingTitles);
+    (getAllMovieTitlesService as jest.Mock).mockResolvedValue(existingTitles);
     const req = { body: { title: "El Padrino" } } as Partial<Request>;
     const res = {
       status: jest.fn().mockReturnThis(),
@@ -35,7 +36,7 @@ describe("postNewMovie when called", () => {
     //When
     await postNewMovie(req as Request, res as Response)
     //Then
-    expect(getAllMovieTitles).toHaveBeenCalledWith()
+    expect(getAllMovieTitlesService).toHaveBeenCalledWith()
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: "Esa peli ya existe" })
   })
@@ -43,7 +44,7 @@ describe("postNewMovie when called", () => {
   it("should give a 201 if movie is correctly saved", async () => {
     //Given
     const existingTitles = ["El Padrino", "green book"];
-    (getAllMovieTitles as jest.Mock).mockResolvedValue(existingTitles);
+    (getAllMovieTitlesService as jest.Mock).mockResolvedValue(existingTitles);
 
     Movie.create = jest.fn().mockResolvedValue({ title: "Star Wars" });
 
@@ -56,7 +57,7 @@ describe("postNewMovie when called", () => {
     //When
     await postNewMovie(req as Request, res as Response)
     //Then
-    expect(getAllMovieTitles).toHaveBeenCalledWith();
+    expect(getAllMovieTitlesService).toHaveBeenCalledWith();
     expect(Movie.create).toHaveBeenCalledWith({ title: "Star Wars" });
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({ message: 'Peli añadida exitosamente' })
@@ -64,12 +65,12 @@ describe("postNewMovie when called", () => {
 });
 
 describe("getMovies controller", () => {
-  it("should be able to render all the movies", async () => {
+  it("should be able to render all the movies sorted", async () => {
     //Given
     const movies = [
+      { title: 'XYZ', year: '1992' },
       { title: 'Ants', year: '2000' },
       { title: 'Monsters INC', year: '2005' },
-      { title: 'XYZ', year: '1992' }
     ];
     (getAllMoviesService as jest.Mock).mockResolvedValue(movies);
 
@@ -80,10 +81,12 @@ describe("getMovies controller", () => {
       json: jest.fn()
     } as Partial<Response>;
 
+    const sortedMovies = sortMoviesByTitle(movies);
     //When
     await getMovies(req as Request, res as Response)
+
     //Then
-    expect(res.render).toHaveBeenCalledWith('my-movies', { movies })
+    expect(res.render).toHaveBeenCalledWith('my-movies', { movies: sortedMovies })
   })
   it("should get a message saying the list is empty", async () => {
     //Given
@@ -99,7 +102,7 @@ describe("getMovies controller", () => {
     //When
     await getMovies(req as Request, res as Response)
     //Then
-    expect(res.status).toHaveBeenCalledWith(204);
+    expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith({ message: 'The list is empty' })
   })
 })

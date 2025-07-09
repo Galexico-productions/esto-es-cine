@@ -7,7 +7,7 @@ export const getAllMoviesService = async (): Promise<{ title: string }[]> => {
     return allMoviesFromRepository
 }
 
-export const getAllMovieTitles = async (): Promise<string[]> => {
+export const getAllMovieTitlesService = async (): Promise<string[]> => {
     const movies = await Movie.find({}, "title").lean();
     return movies.map((m: { title: string }) => m.title);
 } //Esta función tendría que estar en views. 
