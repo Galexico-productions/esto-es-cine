@@ -1,0 +1,1 @@
+export const extractTitles = (movies: { title: string }[]) => movies.map(m => m.title);
