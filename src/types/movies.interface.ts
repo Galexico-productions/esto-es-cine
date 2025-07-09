@@ -6,3 +6,7 @@ export interface MovieType extends Document {
     genre?: string[];
     is_watched?: boolean;
 }
+
+export interface MovieTitleType {
+    title: string;
+}
