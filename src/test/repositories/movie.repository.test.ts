@@ -14,7 +14,7 @@ describe("getAllMoviesFromMongoDB", () => {
         ];
         const mockSort = jest.fn().mockResolvedValue(mockUnorderedMovies);
         const mockCollation = jest.fn().mockReturnValue({ sort: mockSort });
-        jest.spyOn(Movie, "find").mockReturnValue({ collation: mockCollation } as any);
+        const spyOn = jest.spyOn(Movie, "find").mockReturnValue({ collation: mockCollation } as any);
 
         const result = await getAllMoviesFromMongoDB();
 
@@ -29,7 +29,7 @@ describe("getAllMoviesFromMongoDB", () => {
         ];
         const sortMock = jest.fn().mockResolvedValue(mockSortedMovies);
         const collationMock = jest.fn().mockReturnValue({ sort: sortMock })
-        jest.spyOn(Movie, 'find').mockReturnValue({
+        const findSpy = jest.spyOn(Movie, 'find').mockReturnValue({
             collation: collationMock,
         } as any);
 
@@ -37,6 +37,8 @@ describe("getAllMoviesFromMongoDB", () => {
         const result = await getAllMoviesFromMongoDB();
         //Then
         expect(result).toEqual(mockSortedMovies);
+        expect(findSpy).toHaveBeenCalled();
+        expect(sortMock).toHaveBeenCalledWith({ title: 1 });
     })
 });
 
@@ -48,18 +50,17 @@ describe("getAllMoviesTitlesFromMongoDB", () => {
             { title: 'Monsters INC', year: '2005' },
             { title: 'XYZ', year: '1992' }
         ];
-        const mockMoviesTitles = [
-            { title: "Monsters INC"},
-            { title: "XYZ"},
-            { title: "Ants"},
+        const expectedTitles = [
+            "Ants",
+            "Monsters INC",
+            "XYZ",
         ];
-        const mockFind = jest.fn().mockReturnValue(mockMovies);
-        const mockLean = jest.fn().mockReturnValue({ find: mockFind } as any);
-        jest.spyOn(Movie, "find").mockReturnValue({ lean: mockLean } as any );
+        const mockLean = jest.fn().mockReturnValue( mockMovies );
+        jest.spyOn(Movie, "find").mockReturnValue({ lean: mockLean } as any )
         //When
         const result = await getAllMoviesTitlesFromMongoDB()
         //Then
-        expect(result).toEqual(mockMoviesTitles);
-        expect
+        expect(result).toEqual(expectedTitles);
+        expect(mockLean).toHaveBeenCalled();
     })
 })

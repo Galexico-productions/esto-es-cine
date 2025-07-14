@@ -10,7 +10,6 @@ export async function getMovieByTitleFromTMDB(title: string) {
   const data = await res.json();
   const firstMovie = data.results[0];
 
-
   //Asumir que sólo es una y hacer PR cuando funcione
   return [new MovieDomain(firstMovie.title)]
 }

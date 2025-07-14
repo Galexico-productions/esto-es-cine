@@ -1,13 +1,10 @@
-import Movie from '../models/movies.model'
-import { getAllMoviesFromMongoDB } from '../repositories/movie.repository'
+import { getAllMoviesFromMongoDB, getAllMoviesTitlesFromMongoDB } from '../repositories/movie.repository'
 
 
 export const getAllMoviesService = async (): Promise<{ title: string }[]> => {
-    const allMoviesFromRepository = await getAllMoviesFromMongoDB();
-    return allMoviesFromRepository
+    return await getAllMoviesFromMongoDB();
 }
 
 export const getAllMovieTitlesService = async (): Promise<string[]> => {
-    const movies = await Movie.find({}, "title").lean();
-    return movies.map((m: { title: string }) => m.title);
+    return await getAllMoviesTitlesFromMongoDB();
 } 
