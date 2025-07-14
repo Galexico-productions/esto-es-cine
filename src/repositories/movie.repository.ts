@@ -6,3 +6,8 @@ export async function getAllMoviesFromMongoDB(){
     }).sort({ title: 1 });
     return allMovies
 }
+
+export async function getAllMoviesTitlesFromMongoDB(){
+    const allMoviesTitles = await Movie.find({}, "title").lean();
+    return allMoviesTitles.map((m: { title: string }) => m.title);
+}

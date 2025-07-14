@@ -1,6 +1,6 @@
 import Movie from "../../models/movies.model";
 jest.mock('../../models/movies.model')
-import { getAllMoviesFromMongoDB } from "../../repositories/movie.repository"
+import { getAllMoviesFromMongoDB, getAllMoviesTitlesFromMongoDB } from "../../repositories/movie.repository"
 (global.fetch as jest.Mock) = jest.fn();
 
 
@@ -37,5 +37,29 @@ describe("getAllMoviesFromMongoDB", () => {
         const result = await getAllMoviesFromMongoDB();
         //Then
         expect(result).toEqual(mockSortedMovies);
+    })
+});
+
+describe("getAllMoviesTitlesFromMongoDB", () => {
+    it("should get all the movie titles in the MongoDB", async () => {
+        //Given
+        const mockMovies = [
+            { title: 'Ants', year: '2000' },
+            { title: 'Monsters INC', year: '2005' },
+            { title: 'XYZ', year: '1992' }
+        ];
+        const mockMoviesTitles = [
+            { title: "Monsters INC"},
+            { title: "XYZ"},
+            { title: "Ants"},
+        ];
+        const mockFind = jest.fn().mockReturnValue(mockMovies);
+        const mockLean = jest.fn().mockReturnValue({ find: mockFind } as any);
+        jest.spyOn(Movie, "find").mockReturnValue({ lean: mockLean } as any );
+        //When
+        const result = await getAllMoviesTitlesFromMongoDB()
+        //Then
+        expect(result).toEqual(mockMoviesTitles);
+        expect
     })
 })
