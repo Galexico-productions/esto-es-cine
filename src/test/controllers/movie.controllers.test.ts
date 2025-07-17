@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { postNewMovie, getMovies, deleteMovie } from "../../controllers/movie.controllers"
-import { getAllMoviesService, getAllMovieTitlesService } from "../../services/movie.services"
+import { createMovieService, getAllMoviesService, getAllMovieTitlesService } from "../../services/movie.services"
 import Movie from '../../models/movies.model'
 import { sortMoviesByTitle } from '../../viewModels/movieView'
 
@@ -10,6 +10,12 @@ jest.mock('../../models/movies.model')
 
 
 describe("postNewMovie when called", () => {
+  const mockCreateMovieService = createMovieService as jest.Mock;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("should give a 400 error if there is no title", async () => {
     //Given
     const req = { body: { title: '' } } as Partial<Request>;
@@ -20,33 +26,14 @@ describe("postNewMovie when called", () => {
     //When
     await postNewMovie(req as Request, res as Response)
     //Then
+    expect(mockCreateMovieService).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: "Title is required" })
   });
 
-  it("should give a 400 error if movie already exists", async () => {
-    //Given
-    const existingTitles = ["El Padrino", "green book"];
-    (getAllMovieTitlesService as jest.Mock).mockResolvedValue(existingTitles);
-    const req = { body: { title: "El Padrino" } } as Partial<Request>;
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    } as Partial<Response>;
-    //When
-    await postNewMovie(req as Request, res as Response)
-    //Then
-    expect(getAllMovieTitlesService).toHaveBeenCalledWith()
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({ error: "Esa peli ya existe" })
-  })
-
   it("should give a 201 if movie is correctly saved", async () => {
     //Given
-    const existingTitles = ["El Padrino", "green book"];
-    (getAllMovieTitlesService as jest.Mock).mockResolvedValue(existingTitles);
-
-    Movie.create = jest.fn().mockResolvedValue({ title: "Star Wars" });
+    mockCreateMovieService.mockResolvedValue(undefined);
 
     const req = { body: { title: "Star Wars" } } as Partial<Request>;
     const res = {
@@ -57,10 +44,26 @@ describe("postNewMovie when called", () => {
     //When
     await postNewMovie(req as Request, res as Response)
     //Then
-    expect(getAllMovieTitlesService).toHaveBeenCalledWith();
-    expect(Movie.create).toHaveBeenCalledWith({ title: "Star Wars" });
+    expect(mockCreateMovieService).toHaveBeenCalledWith("Star Wars");
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({ message: 'Peli añadida exitosamente' })
+  });
+  it("should return a 500 if unknown error occurs", async () => {
+    // Given
+    mockCreateMovieService.mockRejectedValue(new Error("Database down"));
+
+    const req = { body: { title: "The Matrix" } } as Partial<Request>;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    } as Partial<Response>;
+
+    // When
+    await postNewMovie(req as Request, res as Response);
+    // Then
+    expect(mockCreateMovieService).toHaveBeenCalledWith("The Matrix");
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
   });
 });
 
@@ -110,13 +113,13 @@ describe("deleteMovie controller", () => {
   it("should return 204 and confirmation message when movie is deleted", async () => {
     //Given
     const req = {
-      params: { id: "this is a mock id"}
+      params: { id: "this is a mock id" }
     } as Partial<Request>;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
     } as Partial<Response>;
-    (Movie.findByIdAndDelete as jest.Mock).mockResolvedValue({ title: "any movie "})
+    (Movie.findByIdAndDelete as jest.Mock).mockResolvedValue({ title: "any movie " })
     //When
     await deleteMovie(req as Request, res as Response)
     //Then

@@ -1,48 +1,9 @@
 import Movie from '../models/movies.model';
 import { Request, Response } from 'express';
-import { getAllMoviesService, getAllMovieTitlesService } from '../services/movie.services';
+import { createMovieService, getAllMoviesService, getAllMovieTitlesService } from '../services/movie.services';
 import { getMovieByTitleFromTMDB } from '../client/TMDBClient';
 import { sortMoviesByTitle } from '../viewModels/movieView';
 
-
-export const postNewMovie = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { title } = req.body;
-        if (!title) {
-            res.status(400).json({
-                error: "Title is required"
-            });
-            return
-        };
-
-        const allMovieTitles = await getAllMovieTitlesService();
-        if (allMovieTitles.some((t:string) => t.toLowerCase() === title.toLowerCase())) {
-            res.status(400).json({
-                error: "Esa peli ya existe"
-            });
-            return;
-        };
-
-        await Movie.create({
-            title: req.body.title
-        });
-
-        res.status(201).json({ message: 'Peli añadida exitosamente' });
-        return
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            console.error("Error creating movie:", error.message);
-        } else {
-            console.error("Unkown error:", error)
-        }
-        res.status(500).json({
-            error: "Internal Server Error"
-        })
-            ;
-        return
-
-    }
-}
 export const getMovies = async (req: Request, res: Response): Promise<void> => {
     try {
         const movies = await getAllMoviesService()
@@ -93,6 +54,29 @@ export const getMovieInfo = async (req: Request, res: Response): Promise<void> =
         return
     }
 }
+
+
+export const postNewMovie = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { title } = req.body;
+
+    if (!title || typeof title !== "string") {
+      res.status(400).json({ error: "Title is required" });
+      return;
+    }
+
+    await createMovieService(title);
+    res.status(201).json({ message: "Peli añadida exitosamente" });
+
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error creating movie:", error.message);
+    } else {
+      console.error("Unknown error:", error);
+    }
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 export const deleteMovie = async (req: Request, res: Response): Promise<void> => {
     try {

@@ -1,6 +1,6 @@
 import Movie from "../../models/movies.model";
 jest.mock('../../models/movies.model')
-import { getAllMoviesFromMongoDB, getAllMoviesTitlesFromMongoDB } from "../../repositories/movie.repository"
+import { createMovie, getAllMoviesFromMongoDB, getAllMoviesTitlesFromMongoDB } from "../../repositories/movie.repository"
 (global.fetch as jest.Mock) = jest.fn();
 
 
@@ -55,12 +55,26 @@ describe("getAllMoviesTitlesFromMongoDB", () => {
             "Monsters INC",
             "XYZ",
         ];
-        const mockLean = jest.fn().mockReturnValue( mockMovies );
-        jest.spyOn(Movie, "find").mockReturnValue({ lean: mockLean } as any )
+        const mockLean = jest.fn().mockReturnValue(mockMovies);
+        jest.spyOn(Movie, "find").mockReturnValue({ lean: mockLean } as any)
         //When
         const result = await getAllMoviesTitlesFromMongoDB()
         //Then
         expect(result).toEqual(expectedTitles);
         expect(mockLean).toHaveBeenCalled();
+    })
+})
+
+describe("createNewMovie", () => {
+    it("should create a new movie in the MongoDB", async () => {
+        //Given
+        const mockTitle = "New Movie";
+
+        (Movie.create as jest.Mock).mockResolvedValue({ title: mockTitle })
+        //When
+        await createMovie(mockTitle)
+        //Then
+        expect(Movie.create).toHaveBeenCalledTimes(1);
+        expect(Movie.create).toHaveBeenCalledWith({ title: mockTitle });
     })
 })

@@ -11,3 +11,7 @@ export async function getAllMoviesTitlesFromMongoDB(){
     const allMoviesTitles = await Movie.find({}, "title").lean();
     return allMoviesTitles.map((m: { title: string }) => m.title);
 }
+
+export async function createMovie (title: string): Promise<void> {
+    await Movie.create({ title });
+};
