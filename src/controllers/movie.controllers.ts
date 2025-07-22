@@ -1,6 +1,6 @@
 import Movie from '../models/movies.model';
 import { Request, Response } from 'express';
-import { createMovieService, getAllMoviesService, getAllMovieTitlesService } from '../services/movie.services';
+import { createMovieService, deleteMovieService, getAllMoviesService, getAllMovieTitlesService } from '../services/movie.services';
 import { getMovieByTitleFromTMDB } from '../client/TMDBClient';
 import { sortMoviesByTitle } from '../viewModels/movieView';
 
@@ -81,8 +81,9 @@ export const postNewMovie = async (req: Request, res: Response): Promise<void> =
 export const deleteMovie = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params
-        const deletedMovie = await Movie.findByIdAndDelete(id)
-        if (!deletedMovie) {
+        console.log("🚀 ~ deleteMovie ~ req.params:", req.params)
+        await deleteMovieService(id)
+        if (!id || typeof id !== "string") {
             res.status(404).json({
                 error: 'Movie not found'
             });

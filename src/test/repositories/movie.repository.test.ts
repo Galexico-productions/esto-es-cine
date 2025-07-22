@@ -1,6 +1,6 @@
 import Movie from "../../models/movies.model";
 jest.mock('../../models/movies.model')
-import { createMovie, getAllMoviesFromMongoDB, getAllMoviesTitlesFromMongoDB } from "../../repositories/movie.repository"
+import { createMovie, deleteMovie, getAllMoviesFromMongoDB, getAllMoviesTitlesFromMongoDB } from "../../repositories/movie.repository"
 (global.fetch as jest.Mock) = jest.fn();
 
 
@@ -76,5 +76,19 @@ describe("createNewMovie", () => {
         //Then
         expect(Movie.create).toHaveBeenCalledTimes(1);
         expect(Movie.create).toHaveBeenCalledWith({ title: mockTitle });
+    })
+})
+
+describe("deleteMovie", () => {
+    it("should delete an existing movie in the MongoDB", async () => {
+        //Given
+        const mockId = "test_id";
+
+        (Movie.findByIdAndDelete as jest.Mock).mockResolvedValue({ id: "mockId" })
+        //When
+        await deleteMovie(mockId)
+        //Then
+        expect(Movie.findByIdAndDelete).toHaveBeenCalledTimes(1);
+        expect(Movie.findByIdAndDelete).toHaveBeenCalledWith( mockId )
     })
 })

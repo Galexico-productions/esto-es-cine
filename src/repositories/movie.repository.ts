@@ -15,3 +15,7 @@ export async function getAllMoviesTitlesFromMongoDB(){
 export async function createMovie (title: string): Promise<void> {
     await Movie.create({ title });
 };
+
+export async function deleteMovie (id: string): Promise<void> {
+    await Movie.findByIdAndDelete(id)
+}
