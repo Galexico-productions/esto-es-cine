@@ -1,4 +1,5 @@
 export interface MovieType extends Document {
+    id: string;
     title: string;
     year?: string;
     description?: string;
@@ -9,4 +10,8 @@ export interface MovieType extends Document {
 
 export interface MovieTitleType {
     title: string;
+}
+
+export interface MovieIDType {
+    _id: string
 }

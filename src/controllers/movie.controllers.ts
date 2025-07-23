@@ -32,7 +32,6 @@ export const getMovieInfo = async (req: Request, res: Response): Promise<void> =
     try {
         const movieTitle = req.query.title as string
         const fetchedMovie = await getMovieByTitleFromTMDB(movieTitle) //Temporal: Después mover a services junto con test
-        console.log("🚀 ~ getMovieInfo ~ fetchedMovie:", fetchedMovie)
 
         if (!fetchedMovie) {
             res.status(204).json({
@@ -40,6 +39,7 @@ export const getMovieInfo = async (req: Request, res: Response): Promise<void> =
             })
             return
         } else {
+            res.status(200).json(fetchedMovie);
         }
 
     } catch (error: unknown) {
@@ -57,39 +57,40 @@ export const getMovieInfo = async (req: Request, res: Response): Promise<void> =
 
 
 export const postNewMovie = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { title } = req.body;
+    try {
+        const { title } = req.body;
 
-    if (!title || typeof title !== "string") {
-      res.status(400).json({ error: "Title is required" });
-      return;
+        if (!title || typeof title !== "string") {
+            res.status(400).json({ error: "Title is required" });
+            return;
+        }
+
+        await createMovieService(title);
+        res.status(201).json({ message: "Peli añadida exitosamente" });
+
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error("Error creating movie:", error.message);
+        } else {
+            console.error("Unknown error:", error);
+        }
+        res.status(500).json({ error: "Internal Server Error" });
     }
-
-    await createMovieService(title);
-    res.status(201).json({ message: "Peli añadida exitosamente" });
-
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Error creating movie:", error.message);
-    } else {
-      console.error("Unknown error:", error);
-    }
-    res.status(500).json({ error: "Internal Server Error" });
-  }
 };
 
 export const deleteMovie = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params
         console.log("🚀 ~ deleteMovie ~ req.params:", req.params)
-        await deleteMovieService(id)
+
         if (!id || typeof id !== "string") {
             res.status(404).json({
                 error: 'Movie not found'
             });
             return;
         }
-        res.status(204).json({
+        await deleteMovieService(id)
+        res.status(200).json({
             message: 'Peli borrada exitosamente'
         });
         // res.redirect('/my-movies');

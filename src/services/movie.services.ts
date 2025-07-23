@@ -1,8 +1,9 @@
-import { createMovie, deleteMovie, getAllMoviesFromMongoDB, getAllMoviesTitlesFromMongoDB } from '../repositories/movie.repository'
+import { createMovie, deleteMovie, getAllMoviesFromMongoDB, getAllMoviesIDsFromMongoDB, getAllMoviesTitlesFromMongoDB } from '../repositories/movie.repository'
+import { MovieType } from '../types/movies.interface';
 
 
 export const getAllMoviesService = async (): Promise<{ title: string }[]> => {
-    return await getAllMoviesFromMongoDB();
+    return getAllMoviesFromMongoDB();
 }
 
 export const getAllMovieTitlesService = async (): Promise<string[]> => {
@@ -20,9 +21,8 @@ export const createMovieService = async (title: string): Promise<void> => {
 };
 
 export const deleteMovieService = async (id: string): Promise<void> => {
-    const allMovies = await getAllMoviesTitlesFromMongoDB();
-    console.log("🚀 ~ deleteMovieService ~ allMovies:", allMovies)
-    const exists = allMovies.includes(id);
+    const allMoviesIDs = await getAllMoviesIDsFromMongoDB();
+    const exists = allMoviesIDs.includes(id)
     if(!exists) {
         throw new Error("The movie does not exist in the Database")
     }

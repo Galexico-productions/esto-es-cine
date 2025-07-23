@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/new-movie', postNewMovie);
 router.get('/my-movies', getMovies);
-router.post('/my-movies/:id', deleteMovie);
+router.delete('/my-movies/:id', deleteMovie);
 router.get('/search', getMovieInfo)
 
 export default router;

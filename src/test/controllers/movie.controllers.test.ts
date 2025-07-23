@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { postNewMovie, getMovies, deleteMovie } from "../../controllers/movie.controllers"
-import { createMovieService, getAllMoviesService, getAllMovieTitlesService } from "../../services/movie.services"
+import { createMovieService, deleteMovieService, getAllMoviesService } from "../../services/movie.services"
 import Movie from '../../models/movies.model'
 import { sortMoviesByTitle } from '../../viewModels/movieView'
 
@@ -110,7 +110,13 @@ describe("getMovies controller", () => {
   })
 })
 describe("deleteMovie controller", () => {
-  it("should return 204 and confirmation message when movie is deleted", async () => {
+  const mockDeleteMovieService = deleteMovieService as jest.Mock;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should return 200 and confirmation message when movie is deleted", async () => {
     //Given
     const req = {
       params: { id: "this is a mock id" }
@@ -119,13 +125,51 @@ describe("deleteMovie controller", () => {
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
     } as Partial<Response>;
-    (Movie.findByIdAndDelete as jest.Mock).mockResolvedValue({ title: "any movie " })
+
+    mockDeleteMovieService.mockResolvedValue(undefined);
+
     //When
     await deleteMovie(req as Request, res as Response)
     //Then
-    expect(Movie.findByIdAndDelete).toHaveBeenCalledWith("this is a mock id")
-    expect(res.status).toHaveBeenCalledWith(204);
+    expect(mockDeleteMovieService).toHaveBeenCalledWith("this is a mock id")
+    expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ message: 'Peli borrada exitosamente' })
-  })
-})
+  });
+
+  it("should return 404 if no id is provided", async () => {
+    //Given 
+    const req = { params: {} } as Partial<Request>;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    } as Partial<Response>;
+
+    //When
+    await deleteMovie(req as Request, res as Response);
+
+    //Then
+    expect(mockDeleteMovieService).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Movie not found' })
+  });
+
+  it("should return a 500 code when service failure", async () => {
+    //Given
+    const req = { params: { id: "123" } } as Partial<Request>;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    } as Partial<Response>;
+
+    mockDeleteMovieService.mockRejectedValue(new Error("Something went wrong"));
+
+    //When
+    await deleteMovie(req as Request, res as Response);
+
+    //Then
+    expect(mockDeleteMovieService).toHaveBeenCalledWith("123");
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
+  });
+});
 

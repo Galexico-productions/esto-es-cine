@@ -13,7 +13,7 @@
                 <% for (const m of movies) { %>
                     <li>
                         <%= m.title %>
-                            <form action="/movie/my-movies/<%= m._id %>" method="POST">
+                            <form action="/movie/my-movies/<%= m._id %>?_method=DELETE" method="POST">
                                 <button type="submit">Borrar Peli</button>
                             </form>
                     </li>

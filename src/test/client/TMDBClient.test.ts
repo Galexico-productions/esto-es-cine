@@ -18,7 +18,7 @@ describe("getMovieByTitle", () => {
         //When
         const result = await getMovieByTitleFromTMDB(title);
         //Then
-        expect(result).toEqual([new MovieDomain(title)])
+        expect(result).toEqual([new MovieDomain(title, String(mockMovie[0].id))])
     });
     it("should show an error message when the movie does not exist", async () => {
         //Given
