@@ -16,6 +16,9 @@
                             <form action="/movie/my-movies/<%= m._id %>?_method=DELETE" method="POST">
                                 <button type="submit">Borrar Peli</button>
                             </form>
+                            <div>
+                                <img src="https://image.tmdb.org/t/p/w500/<%=m.poster_path%>" alt="">
+                            </div>
                     </li>
                     <% } %>
             </ol>

@@ -1,3 +1,4 @@
+import { mock } from "node:test";
 import { MovieDomain } from "../../entities/movie.class";
 import Movie from "../../models/movies.model";
 jest.mock('../../models/movies.model')
@@ -70,12 +71,13 @@ describe("getAllMoviesTitlesFromMongoDB", () => {
 describe("createNewMovie", () => {
     it("should create a new movie in the MongoDB", async () => {
         //Given
-        const mockMovie: MovieDomain = new MovieDomain("Interstellar", "300")
+        const mockMovie: MovieDomain = new MovieDomain("Interstellar", "300", "/poster_path.jpg")
 
         const mockCreatedMovie: MovieType = {
             _id: "mockMongoId",
             title: mockMovie.getTitle(),
             tmdbId: mockMovie.getId(),
+            poster_path: mockMovie.getPosterPath(),
             save: jest.fn(),
         } as unknown as MovieType;
 
@@ -84,8 +86,10 @@ describe("createNewMovie", () => {
         const result = await createMovie(mockMovie)
         //Then
         expect(Movie.create).toHaveBeenCalledTimes(1);
-        expect(Movie.create).toHaveBeenCalledWith({ title: mockMovie.getTitle(),
-            tmdbId: mockMovie.getId()
+        expect(Movie.create).toHaveBeenCalledWith({ 
+            title: mockMovie.getTitle(),
+            tmdbId: mockMovie.getId(),
+            poster_path: mockMovie.getPosterPath(),
          });
          expect(result).toEqual(mockCreatedMovie)
     })

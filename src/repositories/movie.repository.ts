@@ -20,10 +20,12 @@ export async function getAllMoviesIDsFromMongoDB(): Promise<string[]> {
 }
 
 export async function createMovie(movie: MovieDomain): Promise<MovieType> {
-    const createdMovie = await Movie.create({ title: movie.getTitle(),
+    const createdMovie = await Movie.create({
+        title: movie.getTitle(),
         tmdbId: movie.getId(),
-     });
-     return createdMovie
+        poster_path: movie.getPosterPath(),
+    });
+    return createdMovie
 };
 
 export async function deleteMovie(id: string): Promise<void> {

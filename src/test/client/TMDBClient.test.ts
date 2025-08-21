@@ -4,21 +4,26 @@ import { MovieDomain } from "../../entities/movie.class";
 
 describe("getMovieByTitle", () => {
     it("should return a list of a movie that matches the title from the TMDB API", async () => {
-        //Given
-        const title = "Titanic"
+        // Given
+        const title = "Titanic";
         const mockMovie = [
-            { id: 1, title: title }
+            { id: 1, title: title, poster_path: "/poster123.jpg" } // added poster_path
         ];
+
         (fetch as jest.Mock).mockResolvedValue({
             ok: true,
             json: async () => ({
                 results: mockMovie
             })
-        })
-        //When
+        });
+
+        // When
         const result = await getMovieByTitleFromTMDB(title);
-        //Then
-        expect(result).toEqual([new MovieDomain(title, String(mockMovie[0].id))])
+
+        // Then
+        expect(result).toEqual([
+            new MovieDomain(title, String(mockMovie[0].id), mockMovie[0].poster_path)
+        ]);
     });
     it("should show an error message when the movie does not exist", async () => {
         //Given

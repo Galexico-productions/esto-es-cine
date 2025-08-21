@@ -60,6 +60,11 @@ const movieSchema = new Schema<MovieType>({
     is_watched: {
         type: Boolean,
         // required: true,
+    },
+    poster_path: {
+        type: String,
+        require: false,
+        unique: false
     }
 });
 
