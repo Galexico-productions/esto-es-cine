@@ -1,9 +1,17 @@
 jest.mock('../../models/movies.model')
 jest.mock('../../repositories/movie.repository.ts')
-import Movie from '../../models/movies.model';
+jest.mock('../../client/TMDBClient.ts')
+import { getMovieByTitleFromTMDB } from '../../client/TMDBClient';
+import { MovieDomain } from '../../entities/movie.class';
 import * as MovieRepository from '../../repositories/movie.repository';
 import { createMovieService, deleteMovieService, getAllMoviesService } from '../../services/movie.services'
 (global.fetch as jest.Mock) = jest.fn();
+
+const mockGetMovieByTitleFromTMDB = getMovieByTitleFromTMDB as jest.Mock;
+const mockGetAllMoviesTitles = MovieRepository.getAllMoviesTitlesFromMongoDB as jest.Mock;
+const mockCreateMovie = MovieRepository.createMovie as jest.Mock;
+const mockGetAllMoviesIDs = MovieRepository.getAllMoviesIDsFromMongoDB as jest.Mock;
+const mockDeleteMovie = MovieRepository.deleteMovie as jest.Mock;
 
 describe("getAllMoviesServices function", () => {
   it("should get all movies from the movies repository", async () => {
@@ -21,24 +29,26 @@ describe("getAllMoviesServices function", () => {
   });
 });
 
-describe("createMovieServie", () => {
-  const mockGetAllMoviesTitles = MovieRepository.getAllMoviesTitlesFromMongoDB as jest.Mock;
-  const mockCreateMovie = MovieRepository.createMovie as jest.Mock;
+describe("createMovieService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should call the repository and check if the movie title already exists", async () => {
+  it("should fetch details from TMDB and save movie if not duplicate", async () => {
     //Given
     mockGetAllMoviesTitles.mockResolvedValue(["Inception", "Matrix"]);
+    const mockMovie = new MovieDomain("Interstellar", "300");
+    mockGetMovieByTitleFromTMDB.mockResolvedValue([mockMovie]);
     mockCreateMovie.mockResolvedValue(undefined);
     //When
-    await createMovieService("Interstellar");
+    const result = await createMovieService("Interstellar");
     //Then
     expect(mockGetAllMoviesTitles).toHaveBeenCalled();
-    expect(mockCreateMovie).toHaveBeenCalledWith("Interstellar");
+    expect(mockGetMovieByTitleFromTMDB).toHaveBeenCalledWith("Interstellar")
+    expect(mockCreateMovie).toHaveBeenCalledWith(mockMovie);
+    expect(result).toEqual(mockMovie);
   })
-    it("should throw an error if the movie already exists (case insensitive)", async () => {
+    it("should throw DUPLICATE_MOVIE if the movie title already exists", async () => {
     //Given
     mockGetAllMoviesTitles.mockResolvedValue(["Inception", "Matrix"]);
 
@@ -46,13 +56,21 @@ describe("createMovieServie", () => {
     await expect(createMovieService("matrix")).rejects.toThrow("DUPLICATE_MOVIE");
 
     //Then
+    expect(mockGetMovieByTitleFromTMDB).not.toHaveBeenCalled();
+    expect(mockCreateMovie).not.toHaveBeenCalled();
+  });
+  it("should throw MOVIE_NOT_FOUND if TMDB returns empty", async () => {
+    //Given
+    mockGetAllMoviesTitles.mockResolvedValue([]);
+    mockGetMovieByTitleFromTMDB.mockResolvedValue([]);
+    //WHen
+    await expect(createMovieService("NonExistingMovie")).rejects.toThrow("MOVIE_NOT_FOUND");
+    //Then
     expect(mockCreateMovie).not.toHaveBeenCalled();
   });
 });
 
 describe("deleteMovieService", () => {
-  const mockGetAllMoviesIDs = MovieRepository.getAllMoviesIDsFromMongoDB as jest.Mock;
-  const mockDeleteMovie = MovieRepository.deleteMovie as jest.Mock;
   beforeEach(() => {
     jest.clearAllMocks();
   });

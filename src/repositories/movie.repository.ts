@@ -1,5 +1,6 @@
+import { MovieDomain } from "../entities/movie.class";
 import Movie from "../models/movies.model";
-import { MovieIDType, MovieTitleType } from "../types/movies.interface";
+import { MovieIDType, MovieTitleType, MovieType } from "../types/movies.interface";
 
 export async function getAllMoviesFromMongoDB() {
     const allMovies = await Movie.find({}).collation({
@@ -18,8 +19,11 @@ export async function getAllMoviesIDsFromMongoDB(): Promise<string[]> {
     return allMoviesIDs.map((m: any) => m._id.toString());
 }
 
-export async function createMovie(title: string): Promise<void> {
-    await Movie.create({ title });
+export async function createMovie(movie: MovieDomain): Promise<MovieType> {
+    const createdMovie = await Movie.create({ title: movie.getTitle(),
+        tmdbId: movie.getId(),
+     });
+     return createdMovie
 };
 
 export async function deleteMovie(id: string): Promise<void> {

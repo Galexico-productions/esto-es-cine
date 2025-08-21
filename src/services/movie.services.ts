@@ -1,3 +1,5 @@
+import { getMovieByTitleFromTMDB } from '../client/TMDBClient';
+import { MovieDomain } from '../entities/movie.class';
 import { createMovie, deleteMovie, getAllMoviesFromMongoDB, getAllMoviesIDsFromMongoDB, getAllMoviesTitlesFromMongoDB } from '../repositories/movie.repository'
 import { MovieType } from '../types/movies.interface';
 
@@ -10,14 +12,26 @@ export const getAllMovieTitlesService = async (): Promise<string[]> => {
     return await getAllMoviesTitlesFromMongoDB();
 } 
 
-export const createMovieService = async (title: string): Promise<void> => {
+export const createMovieService = async (title: string): Promise<MovieDomain> => {
     const existingTitles = await getAllMoviesTitlesFromMongoDB();
     const alreadyExists = existingTitles.some(t => t.toLowerCase() === title.toLowerCase());
 
     if(alreadyExists) {
         throw new Error("DUPLICATE_MOVIE");
     }
-    await createMovie(title);
+
+    const moviesFromTMDB = await getMovieByTitleFromTMDB(title);
+
+    if(!moviesFromTMDB.length){
+        throw new Error("MOVIE_NOT_FOUND");
+    }
+
+    const movie = moviesFromTMDB[0];
+    console.log("🚀 ~ createMovieService ~ movie:", movie)
+
+    await createMovie(movie);
+
+    return movie;
 };
 
 export const deleteMovieService = async (id: string): Promise<void> => {

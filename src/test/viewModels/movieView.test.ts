@@ -17,11 +17,11 @@ describe("extractTitles function", () => {
     it("should return an empty array when receives an empty movie object", () => {
         const movies: { title: string }[] = [];
         const result = extractTitles(movies);
-        expect(result).toEqual(movies);
+        expect(result).toEqual([]);
     });
 });
 
-describe("sortMovieByTitle function", () => {
+describe("sortMoviesByTitle function", () => {
     it("should sort all the movies alphabetically by their titles", () => {
         const unsortedMovies = [
             { title: 'Oppenhaimer' },
