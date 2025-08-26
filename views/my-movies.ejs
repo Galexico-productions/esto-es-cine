@@ -11,10 +11,15 @@
         <div>
             <ol>
                 <% for (const m of movies) { %>
-                    <li>
+                    <li class="
+                    self-center bg-white border-2 border-gray-400 text-[#41403e] 
+                    shadow-[15px_28px_25px_-18px_rgba(0,0,0,0.2)] 
+                    box-border text-base leading-[23px] 
+                    font-[Neucha,sans-serif] px-3 py-2 
+                    transition-all duration-200 ease-in-out w-fit">
                         <%= m.title %>
                             <form action="/movie/my-movies/<%= m._id %>?_method=DELETE" method="POST">
-                                <button type="submit">Borrar Peli</button>
+                                <button class="bg-teal-900" type="submit">Borrar Peli</button>
                             </form>
                             <div>
                                 <img src="https://image.tmdb.org/t/p/w500/<%=m.poster_path%>" alt="">
