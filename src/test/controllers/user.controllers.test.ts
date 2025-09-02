@@ -1,48 +1,57 @@
 import { postNewUser } from "../../controllers/user.controllers";
 import { Request, Response } from "express";
 import { createUserService } from "../../services/user.services";
-import { DBUserType } from "../../types/user.interface";
 
 
 jest.mock("../../services/user.services");
 
 describe("postNewUser controller", () => {
-    const mockUser: DBUserType = {
-        id: "123",
-        name: "Balamovich",
-        email: "balamovich@example.com",
-        password: "password123",
-        isAdmin: false,
-        favoriteMovies: ["peli1", "peli2"]
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should create a new user and return 201", async () => {
+    const reqBody = {
+      name: "Balamovich",
+      email: "balamovich@example.com",
+      password: "password123",
     };
 
-    afterEach(() => {
-        jest.clearAllMocks();
+    const req = { body: reqBody } as Partial<Request>;
+
+    const mockJson = jest.fn();
+    const mockStatus = jest.fn().mockReturnThis();
+    const res = { status: mockStatus, json: mockJson } as Partial<Response>;
+
+    (createUserService as jest.Mock).mockResolvedValue({
+      id: "123",
+      name: reqBody.name,
+      email: reqBody.email,
+      isAdmin: false,
+      favoriteMovies: [],
+      passwordHash: expect.any(String),
     });
 
-    it("should create a new user and return 201", async () => {
-        const req = { body: mockUser } as Partial<Request>;;
+    await postNewUser(req as Request, res as Response);
 
-        const mockJson = jest.fn();
-        const mockStatus = jest.fn().mockReturnThis();
+    expect(createUserService).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: reqBody.name,
+        email: reqBody.email,
+        isAdmin: false,
+        favoriteMovies: [],
+        passwordHash: expect.any(String),
+      })
+    );
 
-        const res = {
-            status: mockStatus,
-            json: mockJson,
-        } as Partial<Response>;
+    expect(mockStatus).toHaveBeenCalledWith(201);
+    expect(mockJson).toHaveBeenCalledWith(
+      expect.objectContaining({ message: "User created successfully" })
+    );
+  });
 
-        (createUserService as jest.Mock).mockResolvedValue(mockUser);
-
-        await postNewUser(req as Request, res as Response);
-
-        expect(createUserService).toHaveBeenCalledWith(mockUser);
-        expect(mockStatus).toHaveBeenCalledWith(201);
-        expect(mockJson).toHaveBeenCalledWith({
-            message: "User created successfully",
-            user: mockUser,
-        });
-    });
-    it("should return 400 if name or email is missing", async () => {
+  it("should return 400 if name or email is missing", async () => {
     const req = { body: { email: "" } } as Partial<Request>;
 
     const mockJson = jest.fn();
@@ -57,13 +66,18 @@ describe("postNewUser controller", () => {
 
     expect(mockStatus).toHaveBeenCalledWith(400);
     expect(mockJson).toHaveBeenCalledWith({
-      error: "Name and email are required",
+      error: "Name, email and password are required",
     });
     expect(createUserService).not.toHaveBeenCalled();
   });
 
   it("should return 500 if service throws error", async () => {
-    const req = { body: mockUser } as Partial<Request>;
+    const reqBody = {
+      name: "Balamovich",
+      email: "balamovich@example.com",
+      password: "password123",
+    };
+    const req = { body: reqBody } as Partial<Request>;
 
     const mockJson = jest.fn();
     const mockStatus = jest.fn().mockReturnThis();

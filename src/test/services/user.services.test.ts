@@ -1,4 +1,4 @@
-import { UserDomain } from "../../models/user.class";
+import { UserDomain } from "../../entities/user.class";
 import { createUser, getUserByEmail } from "../../repositories/user.repository";
 import { DBUserType } from "../../types/user.interface";
 import { createUserService } from "../../services/user.services";

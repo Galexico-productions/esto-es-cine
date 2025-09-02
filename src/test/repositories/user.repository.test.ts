@@ -1,4 +1,4 @@
-import { UserDomain } from "../../models/user.class";
+import { UserDomain } from "../../entities/user.class";
 import User from "../../models/user.model";
 jest.mock('../../models/user.model')
 import { createUser } from "../../repositories/user.repository";

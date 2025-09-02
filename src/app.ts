@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 dotenv.config();
 import indexRoutes from './routes/index.routes';
 import moviesRoutes from './routes/movie.routes';
+import userRoutes from './routes/user.routes';
 import path from 'path';
 import methodOverride from 'method-override'
 
@@ -11,10 +12,12 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
 app.use('/', indexRoutes);
 app.use('/movie', moviesRoutes);
+app.use('/', userRoutes);
 
 async function connectDB() {
     try {
