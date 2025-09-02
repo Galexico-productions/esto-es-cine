@@ -4,7 +4,7 @@ import { MovieIDType, MovieTitleType, MovieType } from "../types/movies.interfac
 
 export async function getAllMoviesFromMongoDB() {
     const allMovies = await Movie.find({}).collation({
-        locale: 'en', strength: 1 //Debería fragmentar aun más? Es decir: 1 función sólo para find, 1 para sort, etc...
+        locale: 'en', strength: 1
     }).sort({ title: 1 });
     return allMovies
 }
