@@ -3,20 +3,34 @@
     <%- include('./partials/head.ejs') %>
 </head>
 
-<body>
+<body class="p-8">
+    <%- include('./partials/nav.ejs') %>
     <section>
-        <h1>Movies!</h1>
-        <form action="/movie/new-movie" method="POST">
-            <label for="title">Agregar una peli</label>
-            <input type="text" name="title" id="title" placeholder="título">
-            <input type="submit" value="Agregar">
-        </form>
+        <div class="flex justify-between">
+            <div>
+                <h1>Movies!</h1>
+                <form action="/movie/new-movie" method="POST">
+                    <label for="title">Add a movie</label>
+                    <input type="text" name="title" id="title" placeholder="título">
+                    <input type="submit" value="Agregar">
+                </form>
+            </div>
+            <div>
+                <div class="text-green-200 test-lg text-right">User sign up</div>
+                <form class="w-64" action="/new-user">
+                    <input type="text" name="name" placeholder="Username">
+                    <input type="password" name="password" placeholder="Password">
+                    <button type="submit">Sign Up</button>
+                </form>
+            </div>
+        </div>
+
         <button>
-            <a href="/movie/my-movies">Lista de pelis</a>
+            <a href="/movie/my-movies">Movie list</a>
         </button>
         <div id="test">
             <button>
-                <a href="/search">Busca una peli</a>
+                <a href="/search">Search for a movie</a>
             </button>
         </div>
     </section>

@@ -5,6 +5,7 @@
 
 
 <body>
+    <%- include('./partials/nav.ejs') %>
     <form action="/movie/search" method="GET">
         <label for="title">Search for a movie</label>
         <input type="text" name="title" id="title" placeholder="movie title">
