@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+.custom-button {
+    @apply px-6 py-1 rounded-lg font-semibold text-white bg-gradient-to-r from-teal-400 via-sky-400 to-orange-300 hover:opacity-80 transition duration-300 shadow-md;
+}
