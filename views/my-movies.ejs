@@ -7,29 +7,35 @@
 
 <body>
     <%- include('./partials/nav.ejs') %>
-    <section>
-        <h1>Movies!</h1>
-        <div>
-            <ol>
-                <% for (const m of movies) { %>
-                    <li class="
-                    self-center bg-white border-2 border-gray-400 text-[#41403e] 
-                    shadow-[15px_28px_25px_-18px_rgba(0,0,0,0.2)] 
-                    box-border text-base leading-[23px] 
-                    font-[Neucha,sans-serif] px-3 py-2 
-                    transition-all duration-200 ease-in-out w-fit">
-                        <%= m.title %>
-                            <form action="/movie/my-movies/<%= m._id %>?_method=DELETE" method="POST">
-                                <button class="bg-teal-900" type="submit">Borrar Peli</button>
-                            </form>
-                            <div>
-                                <img src="https://image.tmdb.org/t/p/w500/<%=m.poster_path%>" alt="">
+        <section class="p-8">
+            <div>
+                <ol class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+                    <% for (const m of movies) { %>
+                        <li class="flex flex-col items-center">
+                            <div class="text-gray-700 mb-2 font-semibold text-lg text-center">
+                                <%= m.title %>
                             </div>
-                    </li>
-                    <% } %>
-            </ol>
-        </div>
-    </section>
+                            <form action="/movie/my-movies/<%= m._id %>?_method=DELETE" method="POST">
+                                <button
+                                    class="px-2 py-0.5 rounded-lg font-semibold text-white bg-gradient-to-r from-orange-300 via-red-400 to-pink-700 hover:opacity-80 transition duration-300 shadow-md"
+                                    type="submit">Delete movie</button>
+                            </form>
+                            <div
+                                class="w-full aspect-w-2 aspect-h-3 rounded-lg overflow-hidden shadow-md bg-gray-800 flex items-center justify-center">
+                                <% if (m.poster_path) { %>
+                                    <img class="w-full h-full object-cover"
+                                        src="https://image.tmdb.org/t/p/w500/<%= m.poster_path %>" alt="">
+                                    <% } else { %>
+                                        <img class="w-full h-full object-cover object-center"
+                                            src="/img/no-movie-poster.jpg"
+                                            alt="Placeholder for missing poster">
+                                        <% } %>
+                            </div>
+                        </li>
+                        <% } %>
+                </ol>
+            </div>
+        </section>
 
 </body>
 
