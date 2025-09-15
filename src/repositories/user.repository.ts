@@ -1,8 +1,8 @@
 import { UserDomain } from "../entities/user.class";
 import User from "../models/user.model";
-import { UserType } from "../types/user.interface";
+import { DBUserType } from "../types/user.interface";
 
-export async function createUser(user: UserDomain): Promise<UserType> {
+export async function createUser(user: UserDomain): Promise<DBUserType> {
  const createdUser = await User.create({
     name: user.name,
     email: user.email,
@@ -14,7 +14,7 @@ export async function createUser(user: UserDomain): Promise<UserType> {
  return createdUser.toObject ? createdUser.toObject() : createdUser;
 }
 
-export async function getUserByEmail(email: string): Promise<UserType | null> {
+export async function getUserByEmail(email: string): Promise<DBUserType | null> {
     const user = await User.findOne({ email });
     return user ? user.toObject() : null;
 }
