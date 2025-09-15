@@ -47,16 +47,16 @@
                         class="bg-gray-700 rounded-lg block min-w-0 grow py-1 pr-3 pl-1 text-base text-white placeholder:text-gray-500 text-center focus:outline-none sm:text-sm/6"
                         type="password" name="password" placeholder="Password">
                 </form>
-                <input
+                <input id="auth-main-submit"
                     class="px-6 py-1 rounded-lg font-bold bg-gradient-to-r from-orange-300 via-sky-400 to-teal-400 bg-clip-text text-transparent hover:opacity-80 transition duration-300 shadow-md grow border-2 border-white border-opacity-20 cursor-pointer"
-                    type="submit" value="Log in">
+                    type="submit" value="Log in" form="login-form">
             </div>
 
 
         </div>
     </div>
     <script>
-        const toggleForm = document.getElementById("toggleForm");
+        const toggleFormCheckbox = document.getElementById("toggleForm");
         const loginForm = document.getElementById("login-form");
         const signupForm = document.getElementById("signup-form");
         const toggleKnob = document.getElementById("toggleKnob");
@@ -64,28 +64,43 @@
         const signupLabel = document.getElementById("Sign-up-label");
         const logInButton = document.querySelector('input[type="submit"]');
         const emailInput = document.getElementById("login-email");
+        const authMainSubmit = document.getElementById("auth-main-submit");
 
-        toggleForm.addEventListener("change", () => {
-            if (toggleForm.checked) {
-                console.log(emailInput.type)
+        toggleFormCheckbox.addEventListener("change", () => {
+            if (toggleFormCheckbox.checked) {
                 loginForm.style.display = "none";
                 signupForm.style.display = "flex";
                 toggleKnob.classList.add("translate-x-6");
                 loginLabel.style.opacity = "0.25"; // moves knob right
                 signupLabel.style.opacity = "1";
                 logInButton.value = "Sign up";
+                logInButton.setAttribute("form", "signup-form");
                 emailInput.type = "email";
-
             } else {
-                console.log(emailInput.type)
                 signupForm.style.display = "none";
                 loginForm.style.display = "flex";
                 toggleKnob.classList.remove("translate-x-6");
                 loginLabel.style.opacity = "1";
                 signupLabel.style.opacity = "0.25";
                 logInButton.value = "Log in";
+                logInButton.setAttribute("form", "login-form");
                 emailInput.type = "hidden";
             }
         });
+        console.log("toggleForm: ", toggleFormCheckbox);
+
+        // function toggleForm(mode) {
+        //     if(mode === 'login') {
+        //         document.getElementById("login-form").style.display = "flex";
+        //         document.getElementById("signup-form").style.display = "none";
+        //         authhMainSubmit.value = "Log in";
+        //         authhMainSubmit.setAttribute("form", "login-form");
+        //     } else {
+        //         document.getElementById("login-form").style.display = "none";
+        //         document.getElementById("signup-form").style.display = "flex";
+        //         authMainSubmit.value = "Sign up";
+        //         authMainSubmit.setAttribute("form", "signup-form");
+        //     }
+        // }
     </script>
 </nav>

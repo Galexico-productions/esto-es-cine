@@ -9,7 +9,6 @@ import { getUserByEmail } from "../repositories/user.repository";
 export async function postNewUser(req: Request, res: Response): Promise<void> {
     try {
         const { name, email, password } = req.body;
-        console.log("🚀 ~ postNewUser ~ req.body:", req.body)
         if (!email || !name || !password) {
             res.status(400).json({ error: "Name, email and password are required" });
             return
