@@ -13,7 +13,7 @@ describe("createUser", () => {
 
         const mockCreatedUser = {
             _id: "123",
-            name: "Balamovich",
+            UserName: "Balamovich",
             email: "rotomskis@gmail.com",
             password: "hashedpassword123",
             isAdmin: false,

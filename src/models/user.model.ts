@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 import { DBUserType } from '../types/user.interface';
 
 const userSchema = new Schema<DBUserType>({
-    name: {
+    userName: {
         type: String,
         required: true,
         unique: false

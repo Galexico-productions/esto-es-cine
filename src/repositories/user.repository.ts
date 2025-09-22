@@ -4,7 +4,7 @@ import { DBUserType } from "../types/user.interface";
 
 export async function createUser(user: UserDomain): Promise<DBUserType> {
  const createdUser = await User.create({
-    name: user.name,
+    userName: user.userName,
     email: user.email,
     password: user.getPasswordHash(),
     isAdmin: user.isAdmin,
@@ -14,7 +14,7 @@ export async function createUser(user: UserDomain): Promise<DBUserType> {
  return createdUser.toObject ? createdUser.toObject() : createdUser;
 }
 
-export async function getUserByEmail(email: string): Promise<DBUserType | null> {
-    const user = await User.findOne({ email });
+export async function getUserByUserName(userName: string): Promise<DBUserType | null> {
+    const user = await User.findOne({ userName });
     return user ? user.toObject() : null;
 }

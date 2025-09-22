@@ -1,17 +1,17 @@
-<nav class="flex justify-between items-center px-8 py-2 bg-gray-800 text-white">
+<nav class="flex justify-between items-center px-4 md:py-8 py-2 bg-gray-800 text-white">
 
     <div>
         <a class="flex flex-row items-end gap-2 hover:opacity-80 transition duration-300" href="/">
-        <span class="text-xl font-bold text-gray-500">En efecto...</span>
-        <h1
-            class="text-8xl font-extrabold bg-gradient-to-r from-teal-400 via-sky-400 to-orange-300 bg-clip-text text-transparent ">
-            Es cine!
-        </h1>
+            <!-- <span class="text-4 font-bold text-gray-500">En efecto...</span> -->
+            <h1
+                class="text-[clamp(1.5rem,6vw,2.5rem)] font-extrabold bg-gradient-to-r from-teal-400 via-sky-400 to-orange-300 bg-clip-text text-transparent ">
+                En efecto, <br class="block sm:hidden" /> es cine!
+            </h1>
         </a>
     </div>
 
-    <div>
-        <div class="flex flex-col gap-2">
+    <div class="w-[20vw] max-sm:w-[40vw] text-[75%] max-w-screen overflow-hidden">
+        <div class="flex flex-col gap-2 justify-between ">
             <div class="flex justify-center hover:opacity-80 transition duration-300 ">
                 <label class="flex items-center cursor-pointer">
                     <span id="Log-in-label" class="mr-2">Log in</span>
@@ -26,34 +26,43 @@
                 <!-- Log form -->
                 <form id="login-form" class="flex flex-col gap-1" action="/login" method="POST" style="display: none">
                     <input
-                        class="bg-gray-700 rounded-lg block min-w-0 grow py-1 pr-3 pl-1 text-base text-white placeholder:text-gray-500 text-center focus:outline-none sm:text-sm/6"
-                        type="text" name="name" placeholder="Username">
+                        class="bg-gray-700 h-6 rounded-lg  block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
+                        type="text" name="userName" placeholder="Username">
                     <input
-                        class="bg-gray-700 rounded-lg block min-w-0 grow py-1 pr-3 pl-1 text-base text-white placeholder:text-gray-500 text-center focus:outline-none sm:text-sm/6"
+                        class="bg-gray-700 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
                         type="hidden" name="email" placeholder="your email here">
                     <input
-                        class="bg-gray-700 rounded-lg block min-w-0 grow py-1 pr-3 pl-1 text-base text-white placeholder:text-gray-500 text-center focus:outline-none sm:text-sm/6"
+                        class="bg-gray-700 h-6 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
                         type="password" name="password" placeholder="Password">
                 </form>
                 <!-- Sign Up form -->
                 <form id="signup-form" class="flex flex-col gap-1" action="/new-user" method="POST">
                     <input
-                        class="bg-gray-700 rounded-lg block min-w-0 grow py-1 pr-3 pl-1 text-base text-white placeholder:text-gray-500 text-center focus:outline-none sm:text-sm/6"
-                        type="text" name="name" placeholder="Username">
+                        class="bg-gray-700 h-6  rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
+                        type="text" name="userName" placeholder="Username">
                     <input id="login-email"
-                        class="bg-gray-700 rounded-lg block min-w-0 grow py-1 pr-3 pl-1 text-base text-white placeholder:text-gray-500 text-center focus:outline-none sm:text-sm/6"
+                        class="bg-gray-700 h-6 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
                         type="hidden" name="email" placeholder="your email here">
                     <input
-                        class="bg-gray-700 rounded-lg block min-w-0 grow py-1 pr-3 pl-1 text-base text-white placeholder:text-gray-500 text-center focus:outline-none sm:text-sm/6"
+                        class="bg-gray-700 h-6 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
                         type="password" name="password" placeholder="Password">
                 </form>
-                <input id="auth-main-submit"
-                    class="px-6 py-1 rounded-lg font-bold bg-gradient-to-r from-orange-300 via-sky-400 to-teal-400 bg-clip-text text-transparent hover:opacity-80 transition duration-300 shadow-md grow border-2 border-white border-opacity-20 cursor-pointer"
-                    type="submit" value="Log in" form="login-form">
+                <input id="auth-main-submit" class="px-6 h-6 md:h-8 rounded-lg font-bold bg-gradient-to-r from-orange-300 via-sky-400 to-teal-400 bg-clip-text text-transparent hover:opacity-80 transition duration-300 shadow-md grow border-2 border-white border-opacity-20 cursor-pointer 
+                flex items-center justify-center" type="submit" value="Log in" form="login-form">
             </div>
 
 
         </div>
+        <% if (isLoggedIn) { %>
+            <p><a class="px-2 py-0.5 rounded-lg font-semibold text-white bg-gradient-to-r from-orange-300 via-red-400 to-pink-700 hover:opacity-80 transition duration-300 shadow-md" href="/logout">Logout</a></p>
+            <% } else { %>
+                <div class="buttons-login-signup">
+
+                    <p><a class="button-logout" href="/signup">Signup</a></p>
+                    <p><a class="button-logout" href="/login">Login</a></p>
+                </div>
+
+                <% } %>
     </div>
     <script>
         const toggleFormCheckbox = document.getElementById("toggleForm");
@@ -87,20 +96,5 @@
                 emailInput.type = "hidden";
             }
         });
-        console.log("toggleForm: ", toggleFormCheckbox);
-
-        // function toggleForm(mode) {
-        //     if(mode === 'login') {
-        //         document.getElementById("login-form").style.display = "flex";
-        //         document.getElementById("signup-form").style.display = "none";
-        //         authhMainSubmit.value = "Log in";
-        //         authhMainSubmit.setAttribute("form", "login-form");
-        //     } else {
-        //         document.getElementById("login-form").style.display = "none";
-        //         document.getElementById("signup-form").style.display = "flex";
-        //         authMainSubmit.value = "Sign up";
-        //         authMainSubmit.setAttribute("form", "signup-form");
-        //     }
-        // }
     </script>
 </nav>

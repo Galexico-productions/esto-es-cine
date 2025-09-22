@@ -13,7 +13,7 @@ describe("postNewUser controller", () => {
 
   it("should create a new user and return 201", async () => {
     const reqBody = {
-      name: "Balamovich",
+      userName: "Balamovich",
       email: "balamovich@example.com",
       password: "password123",
     };
@@ -26,7 +26,7 @@ describe("postNewUser controller", () => {
 
     (createUserService as jest.Mock).mockResolvedValue({
       id: "123",
-      name: reqBody.name,
+      userName: reqBody.userName,
       email: reqBody.email,
       isAdmin: false,
       favoriteMovies: [],
@@ -37,7 +37,7 @@ describe("postNewUser controller", () => {
 
     expect(createUserService).toHaveBeenCalledWith(
       expect.objectContaining({
-        name: reqBody.name,
+        userName: reqBody.userName,
         email: reqBody.email,
         isAdmin: false,
         favoriteMovies: [],
@@ -66,14 +66,14 @@ describe("postNewUser controller", () => {
 
     expect(mockStatus).toHaveBeenCalledWith(400);
     expect(mockJson).toHaveBeenCalledWith({
-      error: "Name, email and password are required",
+      error: "UserName, email and password are required",
     });
     expect(createUserService).not.toHaveBeenCalled();
   });
 
   it("should return 500 if service throws error", async () => {
     const reqBody = {
-      name: "Balamovich",
+      userName: "Balamovich",
       email: "balamovich@example.com",
       password: "password123",
     };

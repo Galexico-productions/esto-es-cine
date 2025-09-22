@@ -1,7 +1,7 @@
 export class UserDomain {
   constructor(
     public id: string = "",
-    public name: string,
+    public userName: string,
     public email: string,
     private passwordHash: string,
     public isAdmin: boolean,

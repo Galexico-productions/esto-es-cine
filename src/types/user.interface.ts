@@ -1,6 +1,6 @@
 export interface UserType {
   id: string;
-  name: string;
+  userName: string;
   email: string;
   isAdmin: boolean;
   favoriteMovies: string[];
