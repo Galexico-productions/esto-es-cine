@@ -10,91 +10,93 @@
         </a>
     </div>
 
-    <div class="w-[20vw] max-sm:w-[40vw] text-[75%] max-w-screen overflow-hidden">
-        <div class="flex flex-col gap-2 justify-between ">
-            <div class="flex justify-center hover:opacity-80 transition duration-300 ">
-                <label class="flex items-center cursor-pointer">
-                    <span id="Log-in-label" class="mr-2">Log in</span>
-                    <input type="checkbox" id="toggleForm" class="hidden" />
-                    <div class="w-12 h-6 bg-gray-600 rounded-full p-1 flex items-center transition">
-                        <div id="toggleKnob" class="w-4 h-4 bg-white rounded-full shadow-md transform transition"></div>
+    <% if (isLoggedIn) { %>
+        <p class="text-sm max-sm:text-xs">Welcome, <span class="font-bold"><%= currentUser %></span>!</p>
+        <p><a class="px-2 py-0.5 rounded-lg font-semibold text-white bg-gradient-to-r from-orange-300 via-red-400 to-pink-700 hover:opacity-80 transition duration-300 shadow-md"
+                href="/logout">Logout</a></p>
+
+        <% } else { %>
+            <div class="w-[20vw] max-sm:w-[40vw] text-[75%] max-w-screen overflow-hidden">
+                <div class="flex flex-col gap-2 justify-between ">
+                    <div class="flex justify-center hover:opacity-80 transition duration-300 ">
+                        <label class="flex items-center cursor-pointer">
+                            <span id="Log-in-label" class="mr-2">Log in</span>
+                            <input type="checkbox" id="toggleForm" class="hidden" />
+                            <div class="w-12 h-6 bg-gray-600 rounded-full p-1 flex items-center transition">
+                                <div id="toggleKnob"
+                                    class="w-4 h-4 bg-white rounded-full shadow-md transform transition">
+                                </div>
+                            </div>
+                            <span id="Sign-up-label" class="ml-2" style="opacity: 0.25">Sign up</span>
+                        </label>
                     </div>
-                    <span id="Sign-up-label" class="ml-2" style="opacity: 0.25">Sign up</span>
-                </label>
-            </div>
-            <div class="w-25% flex flex-col gap-2 items-center">
-                <!-- Log form -->
-                <form id="login-form" class="flex flex-col gap-1" action="/login" method="POST" style="display: none">
-                    <input
-                        class="bg-gray-700 h-6 rounded-lg  block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
-                        type="text" name="userName" placeholder="Username">
-                    <input
-                        class="bg-gray-700 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
-                        type="hidden" name="email" placeholder="your email here">
-                    <input
-                        class="bg-gray-700 h-6 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
-                        type="password" name="password" placeholder="Password">
-                </form>
-                <!-- Sign Up form -->
-                <form id="signup-form" class="flex flex-col gap-1" action="/new-user" method="POST">
-                    <input
-                        class="bg-gray-700 h-6  rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
-                        type="text" name="userName" placeholder="Username">
-                    <input id="login-email"
-                        class="bg-gray-700 h-6 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
-                        type="hidden" name="email" placeholder="your email here">
-                    <input
-                        class="bg-gray-700 h-6 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
-                        type="password" name="password" placeholder="Password">
-                </form>
-                <input id="auth-main-submit" class="px-6 h-6 md:h-8 rounded-lg font-bold bg-gradient-to-r from-orange-300 via-sky-400 to-teal-400 bg-clip-text text-transparent hover:opacity-80 transition duration-300 shadow-md grow border-2 border-white border-opacity-20 cursor-pointer 
+                    <div class="w-25% flex flex-col gap-2 items-center">
+                        <!-- Log form -->
+                        <form id="login-form" class="flex flex-col gap-1" action="/login" method="POST"
+                            style="display: none">
+                            <input
+                                class="bg-gray-700 h-6 rounded-lg  block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
+                                type="text" name="userName" placeholder="Username">
+                            <input
+                                class="bg-gray-700 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
+                                type="hidden" name="email" placeholder="your email here">
+                            <input
+                                class="bg-gray-700 h-6 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
+                                type="password" name="password" placeholder="Password">
+                        </form>
+                        <!-- Sign Up form -->
+                        <form id="signup-form" class="flex flex-col gap-1" action="/new-user" method="POST">
+                            <input
+                                class="bg-gray-700 h-6  rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
+                                type="text" name="userName" placeholder="Username">
+                            <input id="login-email"
+                                class="bg-gray-700 h-6 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
+                                type="hidden" name="email" placeholder="your email here">
+                            <input
+                                class="bg-gray-700 h-6 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
+                                type="password" name="password" placeholder="Password">
+                        </form>
+                        <input id="auth-main-submit" class="px-6 h-6 md:h-8 rounded-lg font-bold bg-gradient-to-r from-orange-300 via-sky-400 to-teal-400 bg-clip-text text-transparent hover:opacity-80 transition duration-300 shadow-md grow border-2 border-white border-opacity-20 cursor-pointer 
                 flex items-center justify-center" type="submit" value="Log in" form="login-form">
-            </div>
+                    </div>
 
 
-        </div>
-        <% if (isLoggedIn) { %>
-            <p><a class="px-2 py-0.5 rounded-lg font-semibold text-white bg-gradient-to-r from-orange-300 via-red-400 to-pink-700 hover:opacity-80 transition duration-300 shadow-md" href="/logout">Logout</a></p>
-            <% } else { %>
-                <div class="buttons-login-signup">
-
-                    <p><a class="button-logout" href="/signup">Signup</a></p>
-                    <p><a class="button-logout" href="/login">Login</a></p>
                 </div>
 
-                <% } %>
-    </div>
-    <script>
-        const toggleFormCheckbox = document.getElementById("toggleForm");
-        const loginForm = document.getElementById("login-form");
-        const signupForm = document.getElementById("signup-form");
-        const toggleKnob = document.getElementById("toggleKnob");
-        const loginLabel = document.getElementById("Log-in-label");
-        const signupLabel = document.getElementById("Sign-up-label");
-        const logInButton = document.querySelector('input[type="submit"]');
-        const emailInput = document.getElementById("login-email");
-        const authMainSubmit = document.getElementById("auth-main-submit");
 
-        toggleFormCheckbox.addEventListener("change", () => {
-            if (toggleFormCheckbox.checked) {
-                loginForm.style.display = "none";
-                signupForm.style.display = "flex";
-                toggleKnob.classList.add("translate-x-6");
-                loginLabel.style.opacity = "0.25"; // moves knob right
-                signupLabel.style.opacity = "1";
-                logInButton.value = "Sign up";
-                logInButton.setAttribute("form", "signup-form");
-                emailInput.type = "email";
-            } else {
-                signupForm.style.display = "none";
-                loginForm.style.display = "flex";
-                toggleKnob.classList.remove("translate-x-6");
-                loginLabel.style.opacity = "1";
-                signupLabel.style.opacity = "0.25";
-                logInButton.value = "Log in";
-                logInButton.setAttribute("form", "login-form");
-                emailInput.type = "hidden";
-            }
-        });
-    </script>
+            </div>
+            <%} %>
+                <script>
+                    const toggleFormCheckbox = document.getElementById("toggleForm");
+                    const loginForm = document.getElementById("login-form");
+                    const signupForm = document.getElementById("signup-form");
+                    const toggleKnob = document.getElementById("toggleKnob");
+                    const loginLabel = document.getElementById("Log-in-label");
+                    const signupLabel = document.getElementById("Sign-up-label");
+                    const logInButton = document.querySelector('input[type="submit"]');
+                    const emailInput = document.getElementById("login-email");
+                    const authMainSubmit = document.getElementById("auth-main-submit");
+
+                    toggleFormCheckbox.addEventListener("change", () => {
+                        if (toggleFormCheckbox.checked) {
+                            loginForm.style.display = "none";
+                            signupForm.style.display = "flex";
+                            toggleKnob.classList.add("translate-x-6");
+                            loginLabel.style.opacity = "0.25"; // moves knob right
+                            signupLabel.style.opacity = "1";
+                            logInButton.value = "Sign up";
+                            logInButton.setAttribute("form", "signup-form");
+                            emailInput.type = "email";
+                        } else {
+                            signupForm.style.display = "none";
+                            loginForm.style.display = "flex";
+                            toggleKnob.classList.remove("translate-x-6");
+                            loginLabel.style.opacity = "1";
+                            signupLabel.style.opacity = "0.25";
+                            logInButton.value = "Log in";
+                            logInButton.setAttribute("form", "login-form");
+                            emailInput.type = "hidden";
+                        }
+                    });
+                </script>
 </nav>
