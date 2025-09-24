@@ -39,7 +39,7 @@
                                 type="text" name="userName" placeholder="Username">
                             <input
                                 class="bg-gray-700 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
-                                type="hidden" name="email" placeholder="your email here">
+                                type="hidden" name="email" placeholder="your email here" pattern="/^[^\s@]+@[^\s@]+\.[^\s@]+$/">
                             <input
                                 class="bg-gray-700 h-6 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
                                 type="password" name="password" placeholder="Password">
@@ -51,7 +51,7 @@
                                 type="text" name="userName" placeholder="Username">
                             <input id="login-email"
                                 class="bg-gray-700 h-6 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
-                                type="hidden" name="email" placeholder="your email here">
+                                type="hidden" name="email" placeholder="your email here" pattern="/^[^\s@]+@[^\s@]+\.[^\s@]+$/">
                             <input
                                 class="bg-gray-700 h-6 rounded-lg block min-w-0 grow py-1 pr-3 pl-1  text-white placeholder:text-gray-500 text-center focus:outline-none"
                                 type="password" name="password" placeholder="Password">
@@ -98,5 +98,7 @@
                             emailInput.type = "hidden";
                         }
                     });
+
+                    
                 </script>
 </nav>
