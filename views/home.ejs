@@ -5,7 +5,17 @@
 
 <body class="bg-gray-100">
     <%- include('./partials/nav.ejs') %>
-        <section class="p-8">
+
+    <% if (!isLoggedIn) { %>
+
+        <section id="login-message">
+            <div class="flex flex-col gap-4 align-center justify-center items-center p-8">
+                <h1>Log in or create your account to begin</h1>
+            </div>
+        </section>
+
+    <% } else { %>    
+        <section id="main-section" class="p-8">
             <!-- Add a title -->
             <div class="flex flex-col gap-8">
                 <div class="flex flex-col gap-4 align-center justify-center items-center">
@@ -42,6 +52,9 @@
                 <!-- Movie list button -->
             </div>
         </section>
+        <% } %>
+    <script>
+    </script>
 </body>
 
 </html>

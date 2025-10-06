@@ -23,7 +23,16 @@ describe("createUserService", () => {
         email: "balamovich@example.com",
         password: "password135",
         isAdmin: false,
-        favoriteMovies: ["peli1", "peli2"]
+        favoriteMovies: [{
+            "title": "Inception",
+            "tmdbId": "27205",
+            "poster_path": "/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg"
+        },
+        {
+            "title": "Interstellar",
+            "tmdbId": "157336",
+            "poster_path": "/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
+        }]
     }
 
     afterEach(() => {

@@ -66,6 +66,8 @@ export const postNewMovie = async (req: Request, res: Response): Promise<void> =
         }
 
         await createMovieService(title);
+
+        res.redirect("/movie/my-movies")
         res.status(201).json({ message: "Peli añadida exitosamente" });
 
     } catch (error: unknown) {
