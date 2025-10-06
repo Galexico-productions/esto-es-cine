@@ -1,10 +1,14 @@
-jest.mock('../../models/movies.model')
 jest.mock('../../repositories/movie.repository.ts')
+jest.mock("../../repositories/user.repository.ts");
 jest.mock('../../client/TMDBClient.ts')
+
 import { getMovieByTitleFromTMDB } from '../../client/TMDBClient';
 import { MovieDomain } from '../../entities/movie.class';
+import User from '../../models/user.model';
 import * as MovieRepository from '../../repositories/movie.repository';
-import { createMovieService, deleteMovieService, getAllMoviesService } from '../../services/movie.services'
+import { addMovieToUser } from '../../repositories/movie.repository'; 
+import { addMovieToUserService, createMovieService, deleteMovieService, getAllMoviesService } from '../../services/movie.services'
+
 (global.fetch as jest.Mock) = jest.fn();
 
 const mockGetMovieByTitleFromTMDB = getMovieByTitleFromTMDB as jest.Mock;
@@ -29,6 +33,32 @@ describe("getAllMoviesServices function", () => {
   });
 });
 
+describe("addMovieToUserService", () => {
+  const mockUserId = "user123";
+  const mockMovieTitle = "Inception";
+  const mockMovie = new MovieDomain("Inception", "123", "/poster.jpg");
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (getMovieByTitleFromTMDB as jest.Mock).mockResolvedValue([mockMovie]);
+    (addMovieToUser as jest.Mock).mockResolvedValue(mockMovie);
+  });
+
+
+  it("should fetch movie data from TMDB and save it to the user’s movie list", async () => {
+    const result = await addMovieToUserService(mockUserId, mockMovieTitle);
+
+    expect(getMovieByTitleFromTMDB).toHaveBeenCalledWith(mockMovieTitle);
+    expect(addMovieToUser).toHaveBeenCalledWith(mockUserId, mockMovie);
+
+    expect(result).toBeInstanceOf(MovieDomain);
+    expect(result.getTitle()).toBe("Inception");
+    expect(result.getId()).toBe("123");
+    expect(result.getPosterPath()).toBe("/poster.jpg");
+  })
+
+})
+
 describe("createMovieService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -48,7 +78,7 @@ describe("createMovieService", () => {
     expect(mockCreateMovie).toHaveBeenCalledWith(mockMovie);
     expect(result).toEqual(mockMovie);
   })
-    it("should throw DUPLICATE_MOVIE if the movie title already exists", async () => {
+  it("should throw DUPLICATE_MOVIE if the movie title already exists", async () => {
     //Given
     mockGetAllMoviesTitles.mockResolvedValue(["Inception", "Matrix"]);
 

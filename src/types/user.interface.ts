@@ -3,9 +3,15 @@ export interface UserType {
   userName: string;
   email: string;
   isAdmin: boolean;
-  favoriteMovies: string[];
+  favoriteMovies: FavoriteMovie[];
 }
 
 export interface DBUserType extends UserType {
   password: string;
+}
+
+export interface FavoriteMovie {
+  title: string;
+  tmdbId: string;
+  poster_path?: string;
 }

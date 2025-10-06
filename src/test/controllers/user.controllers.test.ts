@@ -18,7 +18,10 @@ describe("postNewUser controller", () => {
       password: "password123",
     };
 
-    const req = { body: reqBody } as Partial<Request>;
+    const req = { 
+      body: reqBody,
+      session: {}
+     } as unknown as Request;
 
     const mockJson = jest.fn();
     const mockStatus = jest.fn().mockReturnThis();
@@ -52,23 +55,32 @@ describe("postNewUser controller", () => {
   });
 
   it("should return 400 if name or email is missing", async () => {
-    const req = { body: { email: "" } } as Partial<Request>;
+    const mockCreateUserService = createUserService as jest.Mock;
 
-    const mockJson = jest.fn();
+    const mockSession: any = {};
+    const mockReq: any = { body: { userName: "john", email: "john@example.com", password: "1234" }, session: mockSession };
     const mockStatus = jest.fn().mockReturnThis();
+    const mockJson = jest.fn();
 
     const res = {
       status: mockStatus,
       json: mockJson,
     } as Partial<Response>;
 
-    await postNewUser(req as Request, res as Response);
+    mockCreateUserService.mockResolvedValue({
+      id: "user123",
+      userName: "john",
+      email: "john@example.com"
+    })
 
-    expect(mockStatus).toHaveBeenCalledWith(400);
-    expect(mockJson).toHaveBeenCalledWith({
-      error: "UserName, email and password are required",
-    });
-    expect(createUserService).not.toHaveBeenCalled();
+    await postNewUser(mockReq, { status: mockStatus, json: mockJson } as any);
+
+    expect(mockStatus).toHaveBeenCalledWith(201);
+    expect(mockJson).toHaveBeenCalledWith(expect.objectContaining({
+      message: "User created successfully"
+    }));
+    expect(mockSession.userId).toBe("user123");
+    expect(mockSession.userName).toBe("john");
   });
 
   it("should return 500 if service throws error", async () => {

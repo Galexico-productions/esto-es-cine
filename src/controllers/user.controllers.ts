@@ -27,7 +27,7 @@ export async function postNewUser(req: Request, res: Response): Promise<void> {
 
         const newUser: DBUserType = await createUserService(userDomain);
 
-        req.session.userId = newUser.id;
+        req.session.userId = newUser.id; //
         req.session.userName = newUser.userName;
 
         res.status(201).json({

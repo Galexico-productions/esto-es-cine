@@ -1,6 +1,6 @@
 import { getMovieByTitleFromTMDB } from '../client/TMDBClient';
 import { MovieDomain } from '../entities/movie.class';
-import { createMovie, deleteMovie, getAllMoviesFromMongoDB, getAllMoviesIDsFromMongoDB, getAllMoviesTitlesFromMongoDB } from '../repositories/movie.repository'
+import { addMovieToUser, createMovie, deleteMovie, getAllMoviesFromMongoDB, getAllMoviesIDsFromMongoDB, getAllMoviesTitlesFromMongoDB } from '../repositories/movie.repository'
 import { MovieType } from '../types/movies.interface';
 
 
@@ -33,6 +33,17 @@ export const createMovieService = async (title: string): Promise<MovieDomain> =>
 
     return movie;
 };
+
+export const addMovieToUserService = async (userId: string, title: string) => {
+    const moviesFromTMDB = await getMovieByTitleFromTMDB(title);
+
+    if(!moviesFromTMDB.length) throw new Error("MOVIE_NOT_FOUND");
+
+    const movie = moviesFromTMDB[0];
+
+    await addMovieToUser(userId, movie);
+    return movie
+}
 
 export const deleteMovieService = async (id: string): Promise<void> => {
     const allMoviesIDs = await getAllMoviesIDsFromMongoDB();
