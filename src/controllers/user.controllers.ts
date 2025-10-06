@@ -48,7 +48,6 @@ export async function postNewUser(req: Request, res: Response): Promise<void> {
 export async function postLogin(req: Request, res: Response): Promise<void> {
     try {
         const { userName, password } = req.body;
-        console.log("🚀 ~ postLogin ~ req.body:", req.body)
 
         if (!userName || !password) {
             res.status(400).json({ error: "Username and password are required" });
@@ -56,7 +55,6 @@ export async function postLogin(req: Request, res: Response): Promise<void> {
         }
 
         const user = await getUserByUserName(userName);
-        console.log("🚀 ~ postLogin ~ user:", user)
         if (!user) {
             res.status(400).json({ error: "Invalid credentials " });
             return;
@@ -71,6 +69,7 @@ export async function postLogin(req: Request, res: Response): Promise<void> {
         req.session.userId = user.id;
         req.session.userName = user.userName;
 
+        res.redirect("/");
         res.status(200).json({
             message: "Logged in successfully",
             user: { id: user.id, userName: user.userName, email: user.email }
